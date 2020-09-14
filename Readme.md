@@ -21,9 +21,9 @@ sudo mkdir /var/local/SQL
 
 ```
 # create hard links to service files
-sudo ln ./service_files/collect.service /etc/systemd/system/collect.service
-sudo ln ./service_files/post.service /etc/systemd/system/post.service
-sudo ln ./service_files/config.service /etc/systemd/system/config.service
+sudo ln -s ./service_files/collect.service /etc/systemd/system/collect.service
+sudo ln -s ./service_files/post.service /etc/systemd/system/post.service
+sudo ln -s ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services
 sudo systemctl enable collect

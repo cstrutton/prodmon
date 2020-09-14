@@ -3,25 +3,23 @@
 #### Install required packages:
 ```
 sudo apt-get update
-sudo apt install -y python3 python3-pip python3-venv openssh-server git
+sudo apt install -y python3 python3-pip openssh-server git
 ```
 #### Setup python:
 
 ```
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
-
-# create SQL file directory
-sudo mkdir /var/local/SQL
+python3 setup.py install .
 ```
 
 #### Add Service Files:
 
 ```
-# create hard links to service files
-sudo ln -s ./service_files/collect.service /etc/systemd/system/collect.service
-sudo ln -s ./service_files/post.service /etc/systemd/system/post.service
-sudo ln -s ./service_files/config.service /etc/systemd/system/config.service
+# create links to service files (-f forces if we are re running this)
+sudo ln -f ./service_files/collect.service /etc/systemd/system/collect.service
+sudo ln -f ./service_files/post.service /etc/systemd/system/post.service
+sudo ln -f ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services
 sudo systemctl enable collect
@@ -66,7 +64,7 @@ connmanctl> exit
   - http://variwiki.com/index.php?title=Static_IP_Address
 
 
-## Static IP adresses:
+## Static IP addresses:
 |IP|Machine|MAC| comment |
 |-------------|------|-------------------|---------------|
 | 10.4.42.153 | 1533 | d6:89:7c:ec:e0:9e |10R80 Autogauge|

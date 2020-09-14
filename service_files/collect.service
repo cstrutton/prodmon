@@ -4,7 +4,8 @@ Description=prodmon: PLC counter monitoring
 
 [Service]
 # Command to execute when the service is started
-ExecStart=python3 /home/debian/prodmon/prodmon/plc_collect/main.py /home/debian/prodmon/configs/1617GFxGauge.yml
+WorkingDirectory= /home/debian/prodmon/
+ExecStart=python3 /home/debian/prodmon/prodmon/plc_collect/main.py configs/1617GFxGauge.yml
 Restart=always
 RestartSec=10s
 

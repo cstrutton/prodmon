@@ -1,0 +1,12 @@
+[Unit]
+# Human readable name of the unit
+Description=prodmon: post to db service
+
+[Service]
+# Command to execute when the service is started
+ExecStart=python /home/debian/prodmon/prodmon/db_post/main.py /home/debian/prodmon/configs/1816Gauge.yml
+Restart=always
+RestartSec=600s
+
+[Install]
+WantedBy=default.target

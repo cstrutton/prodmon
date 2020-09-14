@@ -2,7 +2,7 @@ import time
 
 from pylogix import PLC
 
-from prodmon.prodmon.shared.configuration_file import get_config, config_default
+from prodmon.shared.configuration_file import get_config, config_default
 
 
 def set_config_defaults():

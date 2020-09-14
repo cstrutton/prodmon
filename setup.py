@@ -8,5 +8,11 @@ setup(
     license='',
     author='Chris Strutton',
     author_email='chris@rodandfly.ca',
-    description='A collection of python scripts to monitor production counters in industrial PLCs'
+    description='A collection of python scripts to monitor production counters in industrial PLCs',
+    install_requires=[
+        'pylogix~=0.7.0',
+        'PyYAML~=5.3.1',
+        'mysql-connector-python',
+        'Flask~=1.1.2'
+    ]
 )

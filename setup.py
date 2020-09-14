@@ -8,5 +8,5 @@ setup(
     license='',
     author='Chris Strutton',
     author_email='chris@rodandfly.ca',
-    description='A collection of python scripts to monitor industrial PLC counters'
+    description='A collection of python scripts to monitor production counters in industrial PLCs'
 )

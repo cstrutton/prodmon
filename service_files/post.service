@@ -4,7 +4,7 @@ Description=prodmon: post to db service
 
 [Service]
 # Command to execute when the service is started
-ExecStart=python3 /home/debian/prodmon/prodmon/db_post/main.py /home/debian/prodmon/configs/1617Gauge.yml
+ExecStart=python3 /home/debian/prodmon/prodmon/db_post/main.py /home/debian/prodmon/configs/1617GFxGauge.yml
 Restart=always
 RestartSec=600s
 

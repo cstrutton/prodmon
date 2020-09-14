@@ -12,7 +12,7 @@ git clone https://github.com/cstrutton/prodmon
 cd prodmon
 python3 -m venv venv
 source venv/bin/activate
-python3 -m pip install -r requirements.txt
+pip3 install -r requirements.txt
 # create SQL file directory
 sudo mkdir /var/local/SQL
 ```

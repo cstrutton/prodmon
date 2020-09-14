@@ -1,5 +1,5 @@
 collect:
-  sqldir: ../../../tempSQL/
+  sqldir: ./tempSQL/
   minimum_cycle: .5
 
   tags:
@@ -20,7 +20,7 @@ collect:
       lastread: 0     # timestamp of the last read
 
 post:
-  sqldir: ../../../tempSQL/
+  sqldir: ./tempSQL/
   polling_freq: 2
 
   dbconfig:

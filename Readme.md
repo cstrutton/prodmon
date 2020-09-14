@@ -12,16 +12,18 @@ git clone https://github.com/cstrutton/prodmon
 cd prodmon
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirents.txt
+python3 -m pip install -r requirements.txt
+# create SQL file directory
+sudo mkdir /var/local/SQL
 ```
 
 #### Add Service Files:
 
 ```
 # create hard links to service files
-sudo ln ./service_files/collect.service /ect/systemd/system/collect.service
-sudo ln ./service_files/post.service /ect/systemd/system/post.service
-sudo ln ./service_files/config.service /ect/systemd/system/config.service
+sudo ln ./service_files/collect.service /etc/systemd/system/collect.service
+sudo ln ./service_files/post.service /etc/systemd/system/post.service
+sudo ln ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services
 sudo systemctl enable collect

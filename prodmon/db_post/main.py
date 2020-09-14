@@ -1,4 +1,4 @@
-from prodmon.shared.configuration_file import get_config, config_default
+from ..shared.configuration_file import get_config, config_default
 import glob
 import os
 

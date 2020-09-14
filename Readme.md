@@ -8,8 +8,8 @@ sudo apt install -y python3 python3-pip python3-venv openssh-server git
 #### Setup python:
 
 ```
-git clone https://github.com/cstrutton/IMX-server
-cd IMX-server
+git clone https://github.com/cstrutton/prodmon
+cd prodmon
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirents.txt
@@ -19,12 +19,14 @@ pip install -r requirents.txt
 
 ```
 # create hard links to service files
-sudo ln ./service_files/IMX-server.service /ect/systemd/system/IMX-server.service
-sudo ln ./service_files/IMX-server-post-to-db.service /ect/systemd/system/IMX-server-post-to-db.service
+sudo ln ./service_files/collect.service /ect/systemd/system/collect.service
+sudo ln ./service_files/post.service /ect/systemd/system/post.service
+sudo ln ./service_files/config.service /ect/systemd/system/config.service
 
-# enable both services
-sudo systemctl enable IMX-server
-sudo systemctl enable IMX-server-post-to-db
+# enable services
+sudo systemctl enable collect
+sudo systemctl enable post
+sudo systemctl enable config
 
 # reload the configuration
 sudo systemctl daemon-reload
@@ -37,6 +39,7 @@ root@npi:~# connmanctl
 # Plug in the PLANT network and run 
 connmanctl> services # prints out the name of the plant network
 connmanctl> config ethernet_<mac-address>_cable --ipv4 manual 10.2.42.155 255.255.192.0 10.4.1.9
+# network connection will drop after above line is run.
 connmanctl> config ethernet_<mac-address>_cable --nameservers 10.4.1.200 10.5.1.200
 connmanctl> exit
 ```
@@ -46,6 +49,7 @@ root@npi:~# connmanctl
 # Plug in the PLC network and run 
 connmanctl> services # prints out the name of the networks
 connmanctl> config ethernet_<mac-address>_cable --ipv4 manual 192.168.1.254 255.255.255.0
+# network connection will drop after above line is run.
 connmanctl> exit
 ```
 
@@ -63,7 +67,7 @@ connmanctl> exit
 
 
 ## Static IP adresses:
-|IP|Machine|MAC|
+|IP|Machine|MAC| comment |
 |-------------|------|-------------------|---------------|
 | 10.4.42.153 | 1533 | d6:89:7c:ec:e0:9e |10R80 Autogauge|
 | 10.4.42.154 | 1816 | 2e:1a:6d:d1:6f:1d |10R60 Autogauge|

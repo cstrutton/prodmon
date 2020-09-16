@@ -47,6 +47,8 @@ def read_pylogix_counter(counter_entry):
 
         # read the tag
         part_count = comm.Read(counter_entry['tag'])
+        if VERBOSE:
+            print(part_count.TagName, part_count.Value, part_count.Status)
         if part_count.Status != 'Success':
             print('failed to read ', part_count)
             return
@@ -98,8 +100,12 @@ def part_count_entry(table, timestamp, count, machine, parttype):
 
 if __name__ == "__main__":
 
+    VERBOSE = True
+
     config = get_config('collect')
     set_config_defaults()
+    if VERBOSE:
+        print(config)
 
     while True:
         loop()

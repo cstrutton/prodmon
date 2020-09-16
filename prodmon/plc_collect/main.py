@@ -61,9 +61,9 @@ def read_pylogix_counter(counter_entry):
             print('read NA part type')
         if part_type.Status != 'Success':
             print('failed to read ', part_type)
+            return
         if VERBOSE:
             print(part_type)
-        return
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value

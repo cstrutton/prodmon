@@ -1,0 +1,35 @@
+collect:
+  sqldir: ./tempSQL/
+  minimum_cycle: .5
+
+  tags:
+    - type: pylogix_counter       # type = counter|value
+      processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
+      processor_slot: 0             # processor_slot is the controller's slot
+      tag: Deburr_Cell.Status.GoodPartCount  # tag is the PLC tag to read
+      Part_Type_Tag: NA   # tag containing what part type is currently running
+      Part_Type_Map:      # map values in above to a string to write in the part type db column
+        '0': Optimized0
+        '1': Optimized1
+        '2': Optimized2
+      frequency: .5                 # how often to try to read the tag in seconds
+      table: GFxPRoduction          # database table to write to
+      Machine: 769                  # written to machine column in db
+      # used internally to track the readings
+      nextread: 0     # timestamp of the next reading
+      lastcount: 0    # last counter value
+      lastread: 0     # timestamp of the last read
+
+post:
+  sqldir: ./tempSQL/
+  polling_freq: 10
+
+  dbconfig:
+    database: prodrptdb
+    user: stuser
+    password: stp383
+    host: 10.4.1.224
+
+configure:
+  key: value
+  key2: value

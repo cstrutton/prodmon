@@ -58,8 +58,6 @@ def read_pylogix_counter(counter_entry):
         if part_type.TagName == 'NA':
             part_type.Value = '0'
             part_type.Status = 'Success'
-            if DEBUG:
-                print('read NA part type')
         if part_type.Status != 'Success':
             print('failed to read ', part_type)
             return

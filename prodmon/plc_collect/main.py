@@ -1,7 +1,6 @@
 import time
 
 from pylogix import PLC
-
 from prodmon.shared.configuration_file import get_config, config_default
 
 
@@ -52,18 +51,21 @@ def read_pylogix_counter(counter_entry):
             print('failed to read ', part_count)
             return
 
+        # read the Part Type Tag
         part_type = comm.Read(counter_entry['Part_Type_Tag'])
-        if part_type.Status != 'Success':
+        if part_type.TagName == 'NA':
+            part_type.Value = '0'
+            part_type.Status = 'Success'
+        elif part_type.Status != 'Success':
             print('failed to read ', part_type)
-            return
+        return
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...
-            counter_entry['lastcount'] = part_count.Value - \
-                                         1  # only count 1 part
+            counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):

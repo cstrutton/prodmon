@@ -47,7 +47,7 @@ def read_pylogix_counter(counter_entry):
 
         # read the tag
         part_count = comm.Read(counter_entry['tag'])
-        if VERBOSE:
+        if DEBUG:
             print(part_count.TagName, part_count.Value, part_count.Status)
         if part_count.Status != 'Success':
             print('failed to read ', part_count)
@@ -62,7 +62,7 @@ def read_pylogix_counter(counter_entry):
         if part_type.Status != 'Success':
             print('failed to read ', part_type)
             return
-        if VERBOSE:
+        if DEBUG:
             print(part_type)
 
         if part_count.Value == 0:
@@ -74,12 +74,10 @@ def read_pylogix_counter(counter_entry):
         if counter_entry['lastcount'] == 0:  # first time through...
             counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
             if VERBOSE:
-                print('first time through, lastcount=',counter_entry['lastcount'])
+                print('first time through, lastcount=', counter_entry['lastcount'])
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
-                if VERBOSE:
-                    print('Creating a part count entry for ', part_count.Value)
                 part_count_entry(
                     table=counter_entry['table'],
                     timestamp=counter_entry['lastread'],
@@ -92,10 +90,10 @@ def read_pylogix_counter(counter_entry):
 
 
 def part_count_entry(table, timestamp, count, machine, parttype):
-    print('{} made a {} ({})'.format(machine, parttype, count))
 
-    # file_path = '/var/local/SQL/{}.sql'.format(
-    #     str(int(timestamp)))
+    if VERBOSE:
+        print('{} made a {} ({})'.format(machine, parttype, count))
+
     file_path = '{}{}.sql'.format(
         config['sqldir'], str(int(timestamp)))
 
@@ -110,6 +108,7 @@ def part_count_entry(table, timestamp, count, machine, parttype):
 if __name__ == "__main__":
 
     VERBOSE = True
+    DEBUG = False
 
     config = get_config('collect')
     set_config_defaults()

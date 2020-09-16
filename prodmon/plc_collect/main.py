@@ -60,17 +60,25 @@ def read_pylogix_counter(counter_entry):
             part_type.Status = 'Success'
         elif part_type.Status != 'Success':
             print('failed to read ', part_type)
+        if VERBOSE:
+            print(part_count.TagName, part_count.Value, part_count.Status)
         return
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
+            if VERBOSE:
+                print('machine count rolled over or is not running')
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...
             counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
+            if VERBOSE:
+                print('first time through, lastcount=',counter_entry['lastcount'])
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
+                if VERBOSE:
+                    print('Creating a part count entry for ', part_count.Value)
                 part_count_entry(
                     table=counter_entry['table'],
                     timestamp=counter_entry['lastread'],

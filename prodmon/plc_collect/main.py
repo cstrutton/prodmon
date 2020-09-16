@@ -55,10 +55,13 @@ def read_pylogix_counter(counter_entry):
 
         # read the Part Type Tag
         part_type = comm.Read(counter_entry['Part_Type_Tag'])
+        print(part_type)
         if part_type.TagName == 'NA':
             part_type.Value = '0'
             part_type.Status = 'Success'
-        elif part_type.Status != 'Success':
+            print('read NA part type')
+            return
+        if part_type.Status != 'Success':
             print('failed to read ', part_type)
         if VERBOSE:
             print(part_count.TagName, part_count.Value, part_count.Status)
@@ -112,8 +115,8 @@ if __name__ == "__main__":
 
     config = get_config('collect')
     set_config_defaults()
-    if VERBOSE:
-        print(config)
+    # if VERBOSE:
+    #     print(config)
 
     while True:
         loop()

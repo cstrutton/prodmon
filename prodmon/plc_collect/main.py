@@ -66,8 +66,6 @@ def read_pylogix_counter(counter_entry):
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
-            if VERBOSE:
-                print('machine count rolled over or is not running')
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...

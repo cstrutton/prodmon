@@ -3,7 +3,7 @@
 #### Install required packages:
 ```
 sudo apt-get update
-sudo apt install -y python3 python3-pip openssh-server git
+sudo apt install -y python3 python3-pip git
 ```
 #### Setup python:
 
@@ -52,6 +52,9 @@ connmanctl> exit
 ```
 
 ## Notes:
+- Uboot mac address setting
+  - https://stackoverflow.com/a/32750419/1311325
+  
 - service files:
   - https://www.devdungeon.com/content/creating-systemd-service-files
   - https://www.freedesktop.org/software/systemd/man/systemd.service.html#
@@ -69,8 +72,8 @@ connmanctl> exit
 |-------------|------|-------------------|---------------|
 | 10.4.42.153 | 1533 | d6:89:7c:ec:e0:9e |10R80 Autogauge|
 | 10.4.42.154 | 1816 | 2e:1a:6d:d1:6f:1d |10R60 Autogauge|
-| 10.4.42.155 ||||
-| 10.4.42.156 ||||
+| 10.4.42.155 |      | ee:5e:46:b3:bc:ef |               |
+| 10.4.42.156 |      | 8e:fc:            |               |
 | 10.4.42.157 ||||
 | 10.4.42.158 ||||
 | 10.4.42.160 ||||

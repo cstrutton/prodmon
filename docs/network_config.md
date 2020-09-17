@@ -1,12 +1,15 @@
+### Networking Configuration How To
+For Seeed NPI I.MX6ULL
+
 - label center plug PLC and outer plug PLANT
 - connect PLC to dhcp server
 - ssh into unit using the plc port
 - edit /boot/uEnv.txt and add 
     ```
-    # eth0
+    # eth1
     # PLC port mac address
     ethaddr=xx:xx:xx:xx:xx:xx
-    # eth1
+    # eth2
     # Plant port mac address
     eth1addr=xx:xx:xx:xx:xx:xx
     ```

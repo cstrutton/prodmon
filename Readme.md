@@ -19,7 +19,7 @@ pip3 install -r requirements.txt
 
 #### Add Service Files:
 ```
-# update service files to point the correct config file.
+# uncomment the required config file variable in configs/config.env 
 # create hard links to service files (-f forces if we are re running this)
 sudo ln -f ./service_files/collect.service /etc/systemd/system/collect.service
 sudo ln -f ./service_files/post.service /etc/systemd/system/post.service

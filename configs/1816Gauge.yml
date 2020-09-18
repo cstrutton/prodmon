@@ -1,5 +1,5 @@
 collect:
-  sqldir: /var/local/SQL/
+  sqldir: ./tempSQL/
   minimum_cycle: .5
 
   tags:
@@ -13,14 +13,14 @@ collect:
         '1': 50-0455
       frequency: .5                 # how often to try to read the tag in seconds
       table: GFxPRoduction          # database table to write to
-      Machine: 1533                 # written to machine column in db
+      Machine: 1816                 # written to machine column in db
       # used internally to track the readings
       nextread: 0     # timestamp of the next reading
       lastcount: 0    # last counter value
       lastread: 0     # timestamp of the last read
 
 post:
-  sqldir: /var/local/SQL/
+  sqldir: ./tempSQL/
   polling_freq: 10
 
   dbconfig:

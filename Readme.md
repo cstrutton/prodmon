@@ -1,10 +1,11 @@
 ## To setup on Seeed NPI I.MX6ULL board:
 
 ### Networking:
-See Networking Config how to.
+See [docs/network_config.md](docs/network_config.md)
 
 #### Install required packages:
 ```
+#currently does not work on Stackpole network.  Webfilter blocks apt.
 sudo apt-get update
 sudo apt install -y python3 python3-pip git
 ```
@@ -18,7 +19,8 @@ pip3 install -r requirements.txt
 
 #### Add Service Files:
 ```
-# create links to service files (-f forces if we are re running this)
+# update service files to point the correct config file.
+# create hard links to service files (-f forces if we are re running this)
 sudo ln -f ./service_files/collect.service /etc/systemd/system/collect.service
 sudo ln -f ./service_files/post.service /etc/systemd/system/post.service
 sudo ln -f ./service_files/config.service /etc/systemd/system/config.service

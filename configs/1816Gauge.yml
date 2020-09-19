@@ -5,7 +5,7 @@ collect:
   tags:
     - type: pylogix_counter       # type = counter|value
       processor_ip: 192.168.1.2     # processor_ip is the controller's ip address
-      processor_slot: 3             # processor_slot is the controller's slot
+      processor_slot: 2             # processor_slot is the controller's slot
       tag: Program:Production.ProductionData.DailyCounts.DailyTotal  # tag is the PLC tag to read
       Part_Type_Tag: Stn010.PartType # tag containing what part type is currently running
       Part_Type_Map: # map values in above to a string to write in the part type db column

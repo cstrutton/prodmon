@@ -14,7 +14,7 @@ sudo apt install -y python3 python3-pip git
 ```
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
-pip3 install -r requirements.txt
+pip3 install -e .
 ```
 
 #### Add Service Files:

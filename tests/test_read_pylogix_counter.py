@@ -6,7 +6,7 @@ from pylogix.lgx_response import Response
 from prodmon.plc_collect.main import read_pylogix_counter
 
 
-class TestReadPylogixCounter(unittest.TestCase):
+class ReadPylogixCounterTestSuit(unittest.TestCase):
 
     def setUp(self):
         self.counter_entry = {

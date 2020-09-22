@@ -3,6 +3,9 @@ import time
 from pylogix import PLC
 from prodmon.shared.configuration_file import get_config, config_default
 
+VERBOSE = True
+DEBUG = False
+
 
 def set_config_defaults():
     # Set default values for config keys
@@ -87,7 +90,6 @@ def read_pylogix_counter(counter_entry):
 
 
 def part_count_entry(table, timestamp, count, machine, parttype):
-
     if VERBOSE:
         print('{} made a {} ({})'.format(machine, parttype, count))
 
@@ -98,14 +100,11 @@ def part_count_entry(table, timestamp, count, machine, parttype):
         sql = ('INSERT INTO {} '
                '(Machine, Part, PerpetualCount, Timestamp) '
                'VALUES ("{}", "{}" ,{} ,{});\n'.format(
-                table, machine, parttype, count, timestamp))
+            table, machine, parttype, count, timestamp))
         file.write(sql)
 
 
 if __name__ == "__main__":
-
-    VERBOSE = True
-    DEBUG = False
 
     config = get_config('collect')
     set_config_defaults()

@@ -3,7 +3,7 @@ import time
 from pylogix import PLC
 from prodmon.shared.configuration_file import get_config, config_default
 
-VERBOSE = True
+VERBOSE = False
 DEBUG = False
 
 
@@ -13,7 +13,7 @@ def set_config_defaults():
     config_default(config, 'minimum_cycle', .5)
 
 
-def loop():
+def loop(config):
     minimum_cycle = config['minimum_cycle']
 
     for entry in config['tags']:
@@ -100,7 +100,7 @@ def part_count_entry(table, timestamp, count, machine, parttype):
         sql = ('INSERT INTO {} '
                '(Machine, Part, PerpetualCount, Timestamp) '
                'VALUES ("{}", "{}" ,{} ,{});\n'.format(
-            table, machine, parttype, count, timestamp))
+                table, machine, parttype, count, timestamp))
         file.write(sql)
 
 
@@ -112,4 +112,4 @@ if __name__ == "__main__":
     #     print(config)
 
     while True:
-        loop()
+        loop(config)

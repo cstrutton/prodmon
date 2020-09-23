@@ -6,10 +6,10 @@ collect:
     - type: pylogix_counter         # type = pylogix_counter|value
       processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
       processor_slot: 0             # processor_slot is the controller's slot
-      tag: DC_Mark_Pass_Counter1    # tag is the PLC tag to read
+      tag: 'Program:Deburr_Cell.CountPart31'    # tag is the PLC tag to read
       Part_Type_Tag: NA   # tag containing what part type is currently running
       Part_Type_Map:      # map values in above to a string to write in the part type db column
-        '0': Optimized0
+        '0': '50-3050'
       frequency: .5                 # how often to try to read the tag in seconds
       table: GFxPRoduction          # database table to write to
       Machine: 769                  # written to machine column in db
@@ -21,10 +21,10 @@ collect:
     - type: pylogix_counter       # type = counter|value
       processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
       processor_slot: 0             # processor_slot is the controller's slot
-      tag: DC_Mark_Pass_Counter2    # tag is the PLC tag to read
+      tag: 'Program:Deburr_Cell.CountPart32'    # tag is the PLC tag to read
       Part_Type_Tag: NA   # tag containing what part type is currently running
       Part_Type_Map:      # map values in above to a string to write in the part type db column
-        '0': Optimized1
+        '0': '50-1467'
       frequency: .5                 # how often to try to read the tag in seconds
       table: GFxPRoduction          # database table to write to
       Machine: 769                  # written to machine column in db
@@ -36,10 +36,10 @@ collect:
     - type: pylogix_counter       # type = counter|value
       processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
       processor_slot: 0             # processor_slot is the controller's slot
-      tag: DC_Mark_Pass_Counter3    # tag is the PLC tag to read
+      tag: 'Program:Deburr_Cell.CountPart33'    # tag is the PLC tag to read
       Part_Type_Tag: NA   # tag containing what part type is currently running
       Part_Type_Map:      # map values in above to a string to write in the part type db column
-        '0': Optimized2
+        '0': 'Optimized3'
       frequency: .5                 # how often to try to read the tag in seconds
       table: GFxPRoduction          # database table to write to
       Machine: 769                  # written to machine column in db

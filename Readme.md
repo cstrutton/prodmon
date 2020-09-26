@@ -18,8 +18,8 @@ pip3 install -e .
 ```
 #### Install config files
 sudo mkdir /etc/prodmon
-sudo ln ./configs/<active_config>-collect.config /etc/prodmon/collect.config
-sudo ln ./configs/generic-post.config /etc/prodmon/post.config
+sudo ln ./configs/<active_config>-collect.yml /etc/prodmon/collect.config
+sudo ln ./configs/generic-post.yml /etc/prodmon/post.config
 
 #### Add Service Files:
 ```

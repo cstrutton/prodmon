@@ -107,7 +107,7 @@ def part_count_entry(table, timestamp, count, machine, parttype):
 if __name__ == "__main__":
 
     post_config = get_config('collect')
-    set_config_defaults()
+    set_config_defaults(post_config)
     # if VERBOSE:
     #     print(config)
 

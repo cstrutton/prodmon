@@ -3,11 +3,11 @@ import time
 from pylogix import PLC
 from prodmon.shared.configuration_file import get_config, config_default
 
-VERBOSE = False
-DEBUG = False
+# VERBOSE = False
+# DEBUG = False
 
 
-def set_config_defaults():
+def set_config_defaults(config):
     # Set default values for config keys
     config_default(config, 'sqldir', "./tempSQL")
     config_default(config, 'minimum_cycle', .5)
@@ -50,10 +50,10 @@ def read_pylogix_counter(counter_entry):
 
         # read the tag
         part_count = comm.Read(counter_entry['tag'])
-        if DEBUG:
-            print(part_count.TagName, part_count.Value, part_count.Status)
+        # if DEBUG:
+        #     print(part_count.TagName, part_count.Value, part_count.Status)
         if part_count.Status != 'Success':
-            print('failed to read ', part_count)
+            # print('failed to read ', part_count)
             return
 
         # read the Part Type Tag
@@ -62,10 +62,10 @@ def read_pylogix_counter(counter_entry):
             part_type.Value = '0'
             part_type.Status = 'Success'
         if part_type.Status != 'Success':
-            print('failed to read ', part_type)
+            # print('failed to read ', part_type)
             return
-        if DEBUG:
-            print(part_type)
+        # if DEBUG:
+        #     print(part_type)
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
@@ -73,8 +73,8 @@ def read_pylogix_counter(counter_entry):
 
         if counter_entry['lastcount'] == 0:  # first time through...
             counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
-            if VERBOSE:
-                print('first time through, lastcount=', counter_entry['lastcount'])
+            # if VERBOSE:
+            #     print('first time through, lastcount=', counter_entry['lastcount'])
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
@@ -90,8 +90,8 @@ def read_pylogix_counter(counter_entry):
 
 
 def part_count_entry(table, timestamp, count, machine, parttype):
-    if VERBOSE:
-        print('{} made a {} ({})'.format(machine, parttype, count))
+    # if VERBOSE:
+    #     print('{} made a {} ({})'.format(machine, parttype, count))
 
     file_path = '{}{}.sql'.format(
         config['sqldir'], str(int(timestamp)))
@@ -106,10 +106,10 @@ def part_count_entry(table, timestamp, count, machine, parttype):
 
 if __name__ == "__main__":
 
-    config = get_config('collect')
+    post_config = get_config('collect')
     set_config_defaults()
     # if VERBOSE:
     #     print(config)
 
     while True:
-        loop(config)
+        loop(post_config)

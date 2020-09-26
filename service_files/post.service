@@ -6,7 +6,7 @@ Description=prodmon: post to db service
 # Command to execute when the service is started
 EnvironmentFile= /home/debian/prodmon/configs/config.env
 WorkingDirectory= /home/debian/prodmon/
-ExecStart=python3 /home/debian/prodmon/prodmon/db_post/main.py configs/${PRODMON_CONFIG}.yml
+ExecStart=python3 /home/debian/prodmon/prodmon/db_post/main.py
 Restart=always
 RestartSec=30s
 

@@ -16,19 +16,22 @@ git clone https://github.com/cstrutton/prodmon
 cd prodmon
 pip3 install -e .
 ```
+#### Install config files
+mkdir /etc/prodmon
+sudo ln ./configs/<active_config>-collect.config /etc/prodmon/collect.config
+sudo ln ./configs/<active_config>-post.config /etc/prodmon/post.config
 
 #### Add Service Files:
 ```
-# uncomment the required config file variable in configs/config.env 
 # create hard links to service files (-f forces if we are re running this)
 sudo ln -f ./service_files/collect.service /etc/systemd/system/collect.service
 sudo ln -f ./service_files/post.service /etc/systemd/system/post.service
-sudo ln -f ./service_files/config.service /etc/systemd/system/config.service
+# sudo ln -f ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services
 sudo systemctl enable collect
 sudo systemctl enable post
-sudo systemctl enable config
+# sudo systemctl enable config
 
 # reload the configuration
 sudo systemctl daemon-reload

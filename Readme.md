@@ -17,9 +17,9 @@ cd prodmon
 pip3 install -e .
 ```
 #### Install config files
-mkdir /etc/prodmon
+sudo mkdir /etc/prodmon
 sudo ln ./configs/<active_config>-collect.config /etc/prodmon/collect.config
-sudo ln ./configs/<active_config>-post.config /etc/prodmon/post.config
+sudo ln ./configs/generic-post.config /etc/prodmon/post.config
 
 #### Add Service Files:
 ```

@@ -18,17 +18,3 @@ collect:
       nextread: 0     # timestamp of the next reading
       lastcount: 0    # last counter value
       lastread: 0     # timestamp of the last read
-
-post:
-  sqldir: ./tempSQL/
-  polling_freq: 2
-
-  dbconfig:
-    database: prodrptdb
-    user: stuser
-    password: stp383
-    host: 10.4.1.224
-
-configure:
-  key: value
-  key2: value

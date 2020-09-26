@@ -1,0 +1,10 @@
+post:
+  sqldir: ./tempSQL/
+  polling_freq: 2
+
+  dbconfig:
+    database: prodrptdb
+    user: stuser
+    password: stp383
+    host: 10.4.1.224
+

@@ -4,9 +4,8 @@ Description=prodmon: web based configuration
 
 [Service]
 # Command to execute when the service is started
-EnvironmentFile= /home/debian/prodmon/configs/config.env
 WorkingDirectory= /home/debian/prodmon/
-ExecStart=python3 /home/debian/prodmon/prodmon/web_config/main.py configs/${PRODMON_CONFIG}.yml
+ExecStart=python3 /home/debian/prodmon/prodmon/web_config/main.py
 # Restart=on-failure
 # RestartSec=600s
 

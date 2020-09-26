@@ -4,7 +4,6 @@ Description=prodmon: PLC counter monitoring
 
 [Service]
 # Command to execute when the service is started
-EnvironmentFile= /home/debian/prodmon/configs/config.env
 WorkingDirectory= /home/debian/prodmon/
 ExecStart=python3 /home/debian/prodmon/prodmon/plc_collect/main.py
 Restart=always

@@ -94,7 +94,7 @@ def part_count_entry(table, timestamp, count, machine, parttype):
     #     print('{} made a {} ({})'.format(machine, parttype, count))
 
     file_path = '{}{}.sql'.format(
-        config['sqldir'], str(int(timestamp)))
+        collect_config['sqldir'], str(int(timestamp)))
 
     with open(file_path, "a+") as file:
         sql = ('INSERT INTO {} '
@@ -106,10 +106,10 @@ def part_count_entry(table, timestamp, count, machine, parttype):
 
 if __name__ == "__main__":
 
-    post_config = get_config('collect')
-    set_config_defaults(post_config)
+    collect_config = get_config('collect')
+    set_config_defaults(collect_config)
     # if VERBOSE:
     #     print(config)
 
     while True:
-        loop(post_config)
+        loop(collect_config)

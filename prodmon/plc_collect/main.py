@@ -1,10 +1,8 @@
 import time
+from loguru import logger
 
 from pylogix import PLC
 from prodmon.shared.configuration_file import get_config, config_default
-
-# VERBOSE = False
-# DEBUG = False
 
 
 def set_config_defaults(config):
@@ -36,36 +34,38 @@ def loop(config):
 
         entry['lastread'] = now
 
-        if entry['type'] == 'pylogix_counter':
-            read_pylogix_counter(entry)
+        if entry['type'] == 'pylogix_typed_counter':
+            read_pylogix_counter(entry, config)
+
+        if entry['type'] == 'pylogix_simple_counter':
+            read_pylogix_counter(entry, config)
 
         # set the next read timestamp
         entry['nextread'] += frequency
 
 
-def read_pylogix_counter(counter_entry):
+def read_pylogix_counter(counter_entry, config):
     with PLC() as comm:
         comm.IPAddress = counter_entry['processor_ip']
         comm.ProcessorSlot = counter_entry['processor_slot']
 
-        # read the tag
         part_count = comm.Read(counter_entry['tag'])
-        # if DEBUG:
-        #     print(part_count.TagName, part_count.Value, part_count.Status)
         if part_count.Status != 'Success':
-            # print('failed to read ', part_count)
+            logger.error('Failed to read ', part_count)
             return
+        logger.debug(part_count)
 
-        # read the Part Type Tag
-        part_type = comm.Read(counter_entry['Part_Type_Tag'])
-        if part_type.TagName == 'NA':
-            part_type.Value = '0'
-            part_type.Status = 'Success'
-        if part_type.Status != 'Success':
-            # print('failed to read ', part_type)
-            return
-        # if DEBUG:
-        #     print(part_type)
+        if counter_entry['type'] == 'pylogix_typed_counter':
+            # read the Part Type Tag
+            part_type_res = comm.Read(counter_entry['Part_Type_Tag'])
+            logger.debug(part_type_res)
+            if part_type_res.Status != 'Success':
+                logger.error('Failed to read ', part_type_res)
+                return
+            part_type = counter_entry['Part_Type_Map'][str(part_type_res.Value)]
+
+        elif counter_entry['type'] == 'pylogix_simple_counter':
+            part_type = counter_entry['part_type']
 
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
@@ -73,28 +73,28 @@ def read_pylogix_counter(counter_entry):
 
         if counter_entry['lastcount'] == 0:  # first time through...
             counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
-            # if VERBOSE:
-            #     print('first time through, lastcount=', counter_entry['lastcount'])
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
                 part_count_entry(
-                    table=counter_entry['table'],
-                    timestamp=counter_entry['lastread'],
+                    counter_entry=counter_entry,
                     count=entry,
-                    machine=counter_entry['Machine'],
-                    parttype=counter_entry['Part_Type_Map'][str(
-                        part_type.Value)]
+                    parttype=part_type,
+                    config=config
                 )
             counter_entry['lastcount'] = part_count.Value
 
 
-def part_count_entry(table, timestamp, count, machine, parttype):
+def part_count_entry(counter_entry, count, parttype, config):
     # if VERBOSE:
     #     print('{} made a {} ({})'.format(machine, parttype, count))
 
+    table = counter_entry['table']
+    timestamp = counter_entry['lastread'],
+    machine = counter_entry['Machine'],
+
     file_path = '{}{}.sql'.format(
-        collect_config['sqldir'], str(int(timestamp)))
+        config['sqldir'], str(int(timestamp)))
 
     with open(file_path, "a+") as file:
         sql = ('INSERT INTO {} '
@@ -104,12 +104,15 @@ def part_count_entry(table, timestamp, count, machine, parttype):
         file.write(sql)
 
 
-if __name__ == "__main__":
-
+@logger.catch()
+def main():
     collect_config = get_config('collect')
     set_config_defaults(collect_config)
-    # if VERBOSE:
-    #     print(config)
 
     while True:
         loop(collect_config)
+
+
+if __name__ == "__main__":
+    logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
+    main()

@@ -13,6 +13,7 @@ setup(
         'pylogix~=0.7.0',
         'PyYAML~=5.3.1',
         'Flask~=1.1.2',
-        'mysql-connector-python~=8.0.21'
+        'mysql-connector-python~=8.0.21',
+        'loguru'
     ]
 )

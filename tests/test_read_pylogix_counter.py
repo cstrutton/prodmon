@@ -10,37 +10,43 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
     def setUp(self):
         self.counter_entry = {
-            # type = counter|value
-            'type': 'pylogix_counter',
             # processor_ip is the controller's ip address
             'processor_ip': '127.0.0.1',
             # processor_slot is the controller's slot
             'processor_slot': 3,
             # tag is the PLC tag to read
             'tag': 'Program:Production.ProductionData.DailyCounts.DailyTotal',
-            # tag containing what part type is currently running
-            'Part_Type_Tag': 'Line.PartType',
-            # map values in above to a string to write in the part type db colum
-            'Part_Type_Map': {'1': '50-4865', '2': '50-5081'},
             # how often to try to read the tag in seconds
             'frequency': .5,
             # database table to write to
-            'table': 'GFxPRoduction',
+            'table': 'Test Entry DB Table',
             # Machine is written into the machine colum in the database table
-            'Machine': '1617',
+            'Machine': 'Test Entry Machine',
             # used internally to track the readings
             'nextread': 0,  # timestamp of the next reading
             'lastcount': 0,  # last counter value
             'lastread': 0  # timestamp of the last read
         }
+        self.typed_counter_entry = {
+            **self.counter_entry,
+            'type': 'pylogix_typed_counter',
+            'Part_Type_Tag': 'Line.PartType',
+            'Part_Type_Map': {'1': 'PartType1', '2': 'PartType2'}
+        }
+        self.simple_counter_entry = {
+            **self.counter_entry,
+            'type': 'pylogix_simple_counter',
+            'Part_Type': 'SimplePartType',
+        }
+
         self.test_config = {
             'minimum_cycle': 1,
-            'tags': [self.counter_entry]
+            'tags': []
         }
 
     @patch("prodmon.plc_collect.main.part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")
-    def test_first_pass_through(self, mock_read_pylogix_counter, mock_part_count_entry):
+    def test_first_pass_through(self, mock_pylogix_Read, mock_part_count_entry):
         """
         Tests first pass behaviour
         Should create one entry
@@ -50,27 +56,29 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         PART_COUNT = 250
         PART_TYPE = '1'
 
-        self.test_config['tags'][0]['lastcount'] = LAST_PART_COUNT
-        self.test_config['tags'][0]['type'] = 'pylogix_counter'
+        config = self.test_config
+        config['tags'] = [self.typed_counter_entry]
+
+        config['tags'][0]['lastcount'] = LAST_PART_COUNT
 
         part_count_res = Response(
-            tag_name=self.test_config['tags'][0]['tag'], value=PART_COUNT, status='Success')
+            tag_name=config['tags'][0]['tag'], value=PART_COUNT, status='Success')
         part_type_res = Response(
-            tag_name=self.test_config['tags'][0]['tag'], value=PART_TYPE, status='Success')
+            tag_name=config['tags'][0]['tag'], value=PART_TYPE, status='Success')
 
-        mock_read_pylogix_counter.side_effect = [part_count_res, part_type_res]
+        mock_pylogix_Read.side_effect = [part_count_res, part_type_res]
 
-        self.test_config['tags'][0]['lastread'] = 0
+        config['tags'][0]['lastread'] = 0
 
-        read_pylogix_counter(self.test_config['tags'][0])
+        read_pylogix_counter(config['tags'][0], config)
 
-        self.assertEqual(self.test_config['tags'][0]['lastcount'], PART_COUNT)
+        self.assertEqual(config['tags'][0]['lastcount'], PART_COUNT)
 
         mock_part_count_entry.assert_called_once()
 
     @patch("prodmon.plc_collect.main.part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")
-    def test_read_zero_part_count(self, mock_read_pylogix_counter, mock_part_count_entry):
+    def test_read_zero_part_count(self, mock_pylogix_Read, mock_part_count_entry):
         """
         Tests ignoring zero part count readings
         Call read twice with 0 as a response
@@ -80,20 +88,22 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         PART_COUNT = 0
         PART_TYPE: str = '1'
 
-        self.test_config['tags'][0]['lastcount'] = LAST_PART_COUNT
-        self.test_config['tags'][0]['type'] = 'pylogix_counter'
+        config = self.test_config
+        config['tags'] = [self.typed_counter_entry]
+
+        config['tags'][0]['lastcount'] = LAST_PART_COUNT
 
         part_count_res = Response(
-            tag_name=self.test_config['tags'][0]['tag'], value=PART_COUNT, status='Success')
+            tag_name=config['tags'][0]['tag'], value=PART_COUNT, status='Success')
         part_type_res = Response(
-            tag_name=self.test_config['tags'][0]['tag'], value=PART_TYPE, status='Success')
+            tag_name=config['tags'][0]['tag'], value=PART_TYPE, status='Success')
 
-        mock_read_pylogix_counter.side_effect = [part_count_res, part_type_res, part_count_res, part_type_res]
+        mock_pylogix_Read.side_effect = [part_count_res, part_type_res, part_count_res, part_type_res]
 
-        read_pylogix_counter(self.test_config['tags'][0])
-        read_pylogix_counter(self.test_config['tags'][0])
+        read_pylogix_counter(config['tags'][0], config)
+        read_pylogix_counter(config['tags'][0], config)
 
-        self.assertEqual(self.test_config['tags'][0]['lastcount'], PART_COUNT)
+        self.assertEqual(config['tags'][0]['lastcount'], PART_COUNT)
 
         mock_part_count_entry.assert_not_called()
 

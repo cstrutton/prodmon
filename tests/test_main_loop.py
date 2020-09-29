@@ -11,7 +11,7 @@ class MainLoopTestSuit(unittest.TestCase):
     def setUp(self):
         self.counter_entry = {
             # type = counter|value
-            'type': 'pylogix_counter',
+            'type': 'pylogix_typed_counter',
             # processor_ip is the controller's ip address
             'processor_ip': '127.0.0.1',
             # processor_slot is the controller's slot
@@ -48,6 +48,8 @@ class MainLoopTestSuit(unittest.TestCase):
         """
         config = self.test_config
         config['minimum_cycle'] = 1
+        config['tags'][0]['type'] = 'pylogix_typed_counter'
+
         loop(config)
         loop(config)
 
@@ -61,15 +63,22 @@ class MainLoopTestSuit(unittest.TestCase):
         - try looping 3 times waiting for half minimum cycle between each
         - should call read counter exactly 2 times
         """
-        loop(self.test_config)
 
-        time.sleep(self.test_config['minimum_cycle'] / 2)
+        config = self.test_config
+        minimum_cycle = 1
+        config['minimum_cycle'] = minimum_cycle
+        config['tags'][0]['type'] = 'pylogix_typed_counter'
 
-        loop(self.test_config)
 
-        time.sleep(self.test_config['minimum_cycle'] / 2)
+        loop(config)
 
-        loop(self.test_config)
+        time.sleep(minimum_cycle / 2)
+
+        loop(config)
+
+        time.sleep(minimum_cycle / 2)
+
+        loop(config)
 
         self.assertEqual(mock_read_counter.call_count, 2)
 
@@ -79,11 +88,16 @@ class MainLoopTestSuit(unittest.TestCase):
         Tests first pass behaviour
 
         """
-        self.test_config['tags'][0]['nextread'] = 0
+        config = self.test_config
+        minimum_cycle = 1
+        config['minimum_cycle'] = minimum_cycle
+        config['tags'][0]['type'] = 'pylogix_typed_counter'
 
-        loop(self.test_config)
+        config['tags'][0]['nextread'] = 0
 
-        self.assertNotEqual(self.test_config['tags'][0]['nextread'], 0)
+        loop(config)
+
+        self.assertNotEqual(config['tags'][0]['nextread'], 0)
 
 
 if __name__ == '__main__':

@@ -9,14 +9,14 @@ def config_default(config_dict, key, default):
 
 
 def get_config(config_key):
-    if os.path.isfile(sys.argv[1]):
-        config_path = sys.argv[1]
+    if len(sys.argv) == 2:
+        config_path = f'configs/{sys.argv[1]}.yml'
+        if not os.path.isfile(config_path):
+            raise ValueError('Config file not found!')
     elif os.path.isfile(f'/etc/prodmon/{config_key}.yml'):
         config_path = f'/etc/prodmon/{config_key}.yml'
-    else:
-        raise ValueError('Config file not found!')
+
     with open(config_path, 'r') as file:
         config = yaml.load(file, Loader=yaml.FullLoader)
-        config = config[config_key]
 
     return config

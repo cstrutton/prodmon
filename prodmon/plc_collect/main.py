@@ -73,7 +73,7 @@ def read_pylogix_counter(counter_entry, config):
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...
-            counter_entry['lastcount'] = part_count.Value - 1  # only count 1 part
+            counter_entry['lastcount'] = part_count.Value
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
@@ -87,21 +87,15 @@ def read_pylogix_counter(counter_entry, config):
 
 
 def part_count_entry(counter_entry, count, parttype, config):
-    # if VERBOSE:
-    #     print('{} made a {} ({})'.format(machine, parttype, count))
 
     table = counter_entry['table']
-    timestamp = counter_entry['lastread'],
-    machine = counter_entry['Machine'],
-
-    file_path = '{}{}.sql'.format(
-        config['sqldir'], str(int(timestamp)))
+    timestamp = counter_entry['lastread']
+    machine = counter_entry['Machine']
+    file_path = f'{config["sqldir"]}{str(int(timestamp))}.sql'
 
     with open(file_path, "a+") as file:
-        sql = ('INSERT INTO {} '
-               '(Machine, Part, PerpetualCount, Timestamp) '
-               'VALUES ("{}", "{}" ,{} ,{});\n'.format(
-                table, machine, parttype, count, timestamp))
+        sql = (f'INSERT INTO {table} (Machine, Part, PerpetualCount, Timestamp) '
+               f'VALUES ("{machine}" ,"{parttype}" ,{count}, {timestamp});\n')
         file.write(sql)
 
 
@@ -109,7 +103,7 @@ def part_count_entry(counter_entry, count, parttype, config):
 def main():
 
     if os.environ['DEBUG']:
-        logger.add('./logs/prodmon-collect.log')
+        logger.add('templogs/prodmon-collect.log')
     else:
         logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
 

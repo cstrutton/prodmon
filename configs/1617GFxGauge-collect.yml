@@ -2,14 +2,14 @@ sqldir: ./tempSQL/
 minimum_cycle: .5
 
 tags:
-  - type: pylogix_counter       # type = counter|value
+  - type: pylogix_typed_counter       # type = counter|value
     processor_ip: 10.4.42.135     # processor_ip is the controller's ip address
     processor_slot: 3             # processor_slot is the controller's slot
     tag: Program:Production.ProductionData.DailyCounts.DailyTotal  # tag is the PLC tag to read
     Part_Type_Tag: Line.PartType # tag containing what part type is currently running
     Part_Type_Map: # map values in above to a string to write in the part type db colum
-      '0': 50-4865
       '1': 50-5081
+      '2': 50-4865
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1617                 # written to machine colum in db

@@ -1,3 +1,4 @@
+import os
 import time
 from loguru import logger
 
@@ -106,7 +107,14 @@ def part_count_entry(counter_entry, count, parttype, config):
 
 @logger.catch()
 def main():
+
+    if os.environ['DEBUG']:
+        logger.add('./logs/prodmon-collect.log')
+    else:
+        logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
+
     collect_config = get_config('collect')
+
     set_config_defaults(collect_config)
 
     while True:
@@ -114,5 +122,4 @@ def main():
 
 
 if __name__ == "__main__":
-    logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
     main()

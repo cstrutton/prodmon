@@ -102,7 +102,7 @@ def part_count_entry(counter_entry, count, parttype, config):
 @logger.catch()
 def main():
 
-    if os.environ['DEBUG']:
+    if os.environ.get("DEBUG", default=False):
         logger.add('templogs/prodmon-collect.log')
     else:
         logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")

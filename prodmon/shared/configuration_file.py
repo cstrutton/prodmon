@@ -15,7 +15,7 @@ def get_config(config_key):
         config_path = f'/etc/prodmon/{config_key}.config'
     print(f'opening {config_path}')
     if not os.path.isfile(config_path):
-        raise ValueError('Config file not found!')
+        raise ValueError(f'Config file not found! {config_path}')
 
     with open(config_path, 'r') as file:
         config = yaml.load(file, Loader=yaml.FullLoader)

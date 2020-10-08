@@ -11,7 +11,7 @@ def config_default(config_dict, key, default):
 def get_config(config_key):
     if len(sys.argv) == 2:
         config_path = f'configs/{sys.argv[1]}.yml'
-    elif os.path.isfile(f'/etc/prodmon/{config_key}.yml'):
+    else:
         config_path = f'/etc/prodmon/{config_key}.yml'
 
     if not os.path.isfile(config_path):

@@ -33,8 +33,15 @@ sudo systemctl enable collect
 sudo systemctl enable post
 # sudo systemctl enable config
 
-# reload the configuration
+# reload the systemd configuration
 sudo systemctl daemon-reload
+```
+
+#### Config files:
+```
+sudo ln -sfv ./configs/<config_file> /etc/prodmon/collect.config
+sudo ln -sfv ./configs/<config_file> /etc/prodmon/post.config
+
 ```
 
 

@@ -74,7 +74,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
         self.assertEqual(config['tags'][0]['lastcount'], PART_COUNT)
 
-        mock_part_count_entry.assert_called_once()
+        mock_part_count_entry.assert_not_called()
 
     @patch("prodmon.plc_collect.main.part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")

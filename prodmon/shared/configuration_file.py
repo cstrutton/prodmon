@@ -14,7 +14,7 @@ def get_config(config_key):
     else:
         config_path = f'/etc/prodmon/{config_key}.config'
     print(f'opening {config_path}')
-    if not os.path.isfile(config_path):
+    if not os.path.exists(config_path):
         raise ValueError(f'Config file not found! {config_path}')
 
     with open(config_path, 'r') as file:

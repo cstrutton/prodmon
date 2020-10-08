@@ -13,7 +13,7 @@ def get_config(config_key):
         config_path = f'configs/{sys.argv[1]}.yml'
     else:
         config_path = f'/etc/prodmon/{config_key}.yml'
-
+    print(f'opening {config_path}')
     if not os.path.isfile(config_path):
         raise ValueError('Config file not found!')
 

@@ -18,8 +18,8 @@ pip3 install -e .
 ```
 #### Install config files
 sudo mkdir /etc/prodmon
-sudo ln ./configs/<active_config>-collect.yml /etc/prodmon/collect.config
-sudo ln ./configs/generic-post.yml /etc/prodmon/post.config
+sudo ln -sfv ./configs/<active_config>-collect.yml /etc/prodmon/collect.config
+sudo ln -sfv ./configs/generic-post.yml /etc/prodmon/post.config
 
 #### Add Service Files:
 ```
@@ -36,14 +36,6 @@ sudo systemctl enable post
 # reload the systemd configuration
 sudo systemctl daemon-reload
 ```
-
-#### Config files:
-```
-sudo ln -sfv ./configs/<config_file> /etc/prodmon/collect.config
-sudo ln -sfv ./configs/<config_file> /etc/prodmon/post.config
-
-```
-
 
 ## Static IP addresses:
 See [docs/mac-ip-addresses.md](docs/mac-ip-addresses.md)

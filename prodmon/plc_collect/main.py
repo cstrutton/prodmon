@@ -54,12 +54,10 @@ def read_pylogix_counter(counter_entry, config):
         if part_count.Status != 'Success':
             logger.error('Failed to read ', part_count)
             return
-        logger.debug(part_count)
 
         if counter_entry['type'] == 'pylogix_typed_counter':
             # read the Part Type Tag
             part_type_res = comm.Read(counter_entry['Part_Type_Tag'])
-            logger.debug(part_type_res)
             if part_type_res.Status != 'Success':
                 logger.error('Failed to read ', part_type_res)
                 return
@@ -68,12 +66,15 @@ def read_pylogix_counter(counter_entry, config):
         elif counter_entry['type'] == 'pylogix_simple_counter':
             part_type = counter_entry['part_type']
 
+        logger.debug(f'Read counter:{part_count}, type:{part_type}')
+
         if part_count.Value == 0:
             counter_entry['lastcount'] = part_count.Value
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...
             counter_entry['lastcount'] = part_count.Value
+            logger.info('First pass through')
 
         if part_count.Value > counter_entry['lastcount']:
             for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
@@ -83,6 +84,7 @@ def read_pylogix_counter(counter_entry, config):
                     parttype=part_type,
                     config=config
                 )
+                logger.info(f'Creating entry for part#{entry}')
             counter_entry['lastcount'] = part_count.Value
 
 

@@ -1,9 +1,11 @@
 import os
 import time
-from loguru import logger
 
 from pylogix import PLC
 from prodmon.shared.configuration_file import get_config, config_default
+from prodmon.shared.log_setup import get_logger
+
+logger = get_logger()
 
 
 def set_config_defaults(config):
@@ -104,10 +106,11 @@ def part_count_entry(counter_entry, count, parttype, config):
 @logger.catch()
 def main():
 
-    if os.environ.get("DEBUG", default=False):
-        logger.add('templogs/prodmon-collect.log')
-    else:
-        logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
+    # if os.environ.get("DEBUG", default=False):
+    #     logger.add('templogs/prodmon-collect.log')
+    # else:
+    #     logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
+    #
 
     collect_config = get_config('collect')
 

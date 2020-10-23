@@ -1,0 +1,31 @@
+sqldir: ./tempSQL/
+minimum_cycle: .5
+
+tags:
+  - type: pylogix                           # type = pylogix | modbus
+    processor_ip: 192.168.1.2               # processor_ip is the controller's ip address
+    processor_slot: 2                       # processor_slot is the controller's slot
+    tag: Program:Production.ProdCount1.ACC  # tag is the PLC tag to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: .5           # how often to try to read the tag in seconds
+    table: GFxPRoduction    # database table to write to
+    Machine: 1816           # written to machine column in db
+    # used internally to track the readings
+    nextread: 0     # timestamp of the next reading
+    lastcount: 0    # last counter value
+    lastread: 0     # timestamp of the last read
+
+  - type: pylogix                           # type = pylogix | modbus
+    processor_ip: 192.168.1.2               # processor_ip is the controller's ip address
+    processor_slot: 2                       # processor_slot is the controller's slot
+    tag: Program:Production.ProdCount2.ACC  # tag is the PLC tag to read
+    Part_Number: '50-0455'
+    Scale: 1
+    frequency: .5           # how often to try to read the tag in seconds
+    table: GFxPRoduction    # database table to write to
+    Machine: 1816           # written to machine column in db
+    # used internally to track the readings
+    nextread: 0     # timestamp of the next reading
+    lastcount: 0    # last counter value
+    lastread: 0     # timestamp of the last read

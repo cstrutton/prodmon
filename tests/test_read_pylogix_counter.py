@@ -20,7 +20,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
             'frequency': .5,
             # database table to write to
             'table': 'Test Entry DB Table',
-            # Machine is written into the machine colum in the database table
+            # Machine is written into the machine column in the database table
             'Machine': 'Test Entry Machine',
             # used internally to track the readings
             'nextread': 0,  # timestamp of the next reading
@@ -36,7 +36,8 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         self.simple_counter_entry = {
             **self.counter_entry,
             'type': 'pylogix_simple_counter',
-            'Part_Type': 'SimplePartType',
+            'Part_Number': 'SimplePartType',
+            'Scale': 1
         }
 
         self.test_config = {
@@ -106,6 +107,33 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         self.assertEqual(config['tags'][0]['lastcount'], PART_COUNT)
 
         mock_part_count_entry.assert_not_called()
+
+    @patch("prodmon.plc_collect.main.part_count_entry")
+    @patch("prodmon.plc_collect.main.PLC.Read")
+    def test_read_with_scaling(self, mock_pylogix_Read, mock_part_count_entry):
+        """
+        Tests reading with scaling
+        Read one part with a scale of 2
+        Should call part_count_entry 2 times
+        """
+        TEST_SCALE = 2
+        LAST_PART_COUNT = 250
+        PART_COUNT = LAST_PART_COUNT + 1
+
+        config = self.test_config
+        config['tags'] = [self.simple_counter_entry]
+
+        config['tags'][0]['lastcount'] = LAST_PART_COUNT * TEST_SCALE
+        config['tags'][0]['scale'] = TEST_SCALE
+
+        part_count_res = Response(
+            tag_name=config['tags'][0]['tag'], value=PART_COUNT, status='Success')
+
+        mock_pylogix_Read.side_effect = [part_count_res]
+
+        read_pylogix_counter(config['tags'][0], config)
+
+        self.assertEqual( mock_part_count_entry.call_count, TEST_SCALE)
 
 
 if __name__ == '__main__':

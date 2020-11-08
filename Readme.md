@@ -7,15 +7,17 @@ See [docs/network_config.md](docs/network_config.md)
 ```
 #currently does not work on Stackpole network.  Webfilter blocks apt.
 sudo apt-get update
-sudo apt install -y python3 python3-pip git
+sudo apt install -y python3 python3-pip python3-venv git
 ```
 
 #### Clone and install Production Monitor
 ```
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
-pip3 install -e .
+python3 -m venv venv            # create virtual env
+venv/bin/pip3 install -e .      # install prodmon into it
 ```
+
 #### Install config files
 sudo mkdir /etc/prodmon
 sudo ln -sfv ./configs/<active_config>-collect.yml /etc/prodmon/collect.config
@@ -23,9 +25,9 @@ sudo ln -sfv ./configs/generic-post.yml /etc/prodmon/post.config
 
 #### Add Service Files:
 ```
-# create hard links to service files (-f forces if we are re running this)
-sudo ln -f ./service_files/collect.service /etc/systemd/system/collect.service
-sudo ln -f ./service_files/post.service /etc/systemd/system/post.service
+# copy service files to config directory
+sudo cp service_files/<collect-service>.service /etc/systemd/system/collect.service
+sudo cp service_files/<post-service>.service /etc/systemd/system/post.service
 # sudo ln -f ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services
@@ -39,3 +41,21 @@ sudo systemctl daemon-reload
 
 ## Static IP addresses:
 See [docs/mac-ip-addresses.md](docs/mac-ip-addresses.md)
+
+## Add log-in status check to to .bashrc ##
+
+```
+tee -a .bashrc <<EOF
+
+if (systemctl -q is-active collect.service)
+    then
+    echo "Collect service is running."
+fi
+
+if (systemctl -q is-active post.service)
+    then
+    echo "Post service is running."
+fi
+
+EOF
+``` 

@@ -66,7 +66,7 @@ def read_pylogix_counter(counter_entry, config):
             part_type = counter_entry['Part_Type_Map'][str(part_type_res.Value)]
 
         elif counter_entry['type'] == 'pylogix_simple_counter':
-            part_type = counter_entry['part_type']
+            part_type = counter_entry['Part_Number']
 
         logger.debug(f'Read counter:{part_count}, type:{part_type}')
 

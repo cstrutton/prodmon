@@ -70,16 +70,19 @@ def read_pylogix_counter(counter_entry, config):
 
         logger.debug(f'Read counter:{part_count}, type:{part_type}')
 
-        if part_count.Value == 0:
-            counter_entry['lastcount'] = part_count.Value
+        count = part_count.Value * counter_entry.get('scale', 1)
+
+        if count == 0:
+            counter_entry['lastcount'] = count
             return  # machine count rolled over or is not running
 
         if counter_entry['lastcount'] == 0:  # first time through...
-            counter_entry['lastcount'] = part_count.Value
+            counter_entry['lastcount'] = count
             logger.info('First pass through')
 
-        if part_count.Value > counter_entry['lastcount']:
-            for entry in range(counter_entry['lastcount'] + 1, part_count.Value + 1):
+        if count > counter_entry['lastcount']:
+            for entry in range(counter_entry['lastcount'] + 1, count + 1):
+
                 part_count_entry(
                     counter_entry=counter_entry,
                     count=entry,
@@ -87,7 +90,7 @@ def read_pylogix_counter(counter_entry, config):
                     config=config
                 )
                 logger.info(f'Creating entry for part#{entry}')
-            counter_entry['lastcount'] = part_count.Value
+            counter_entry['lastcount'] = count
 
 
 def part_count_entry(counter_entry, count, parttype, config):

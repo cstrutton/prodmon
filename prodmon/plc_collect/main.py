@@ -37,10 +37,7 @@ def loop(config):
 
         entry['lastread'] = now
 
-        if entry['type'] == 'pylogix_typed_counter':
-            read_pylogix_counter(entry, config)
-
-        if entry['type'] == 'pylogix_simple_counter':
+        if entry['type'] == 'pylogix_counter':
             read_pylogix_counter(entry, config)
 
         # set the next read timestamp
@@ -57,16 +54,7 @@ def read_pylogix_counter(counter_entry, config):
             logger.error('Failed to read ', part_count)
             return
 
-        if counter_entry['type'] == 'pylogix_typed_counter':
-            # read the Part Type Tag
-            part_type_res = comm.Read(counter_entry['Part_Type_Tag'])
-            if part_type_res.Status != 'Success':
-                logger.error('Failed to read ', part_type_res)
-                return
-            part_type = counter_entry['Part_Type_Map'][str(part_type_res.Value)]
-
-        elif counter_entry['type'] == 'pylogix_simple_counter':
-            part_type = counter_entry['Part_Number']
+        part_type = counter_entry['Part_Number']
 
         logger.debug(f'Read counter:{part_count}, type:{part_type}')
 

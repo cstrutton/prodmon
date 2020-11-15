@@ -1,0 +1,6 @@
+pylogix
+PyYAML
+mysql-connector-python
+Flask
+loguru
+setuptools

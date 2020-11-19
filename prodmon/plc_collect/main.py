@@ -39,7 +39,7 @@ def loop(config):
 
         entry['lastread'] = now
 
-        if entry['type'] == 'pylogix_counter':
+        if entry['type'] == 'pylogix':
             read_pylogix_counter(entry, config)
 
         # set the next read timestamp

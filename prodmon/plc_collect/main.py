@@ -15,6 +15,8 @@ def set_config_defaults(config):
 
 
 def loop(config):
+    import pdb
+    pdb.set_trace()
     minimum_cycle = config['minimum_cycle']
 
     for entry in config['tags']:

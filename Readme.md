@@ -7,7 +7,7 @@ See [docs/network_config.md](docs/network_config.md)
 ```
 #currently does not work on Stackpole network.  Webfilter blocks apt.
 sudo apt-get update
-sudo apt install -y python3 python3-pip python3-venv git
+sudo apt install -y python3 python3-pip python3-venv git python3-dev build-essential
 ```
 
 #### Clone and install Production Monitor

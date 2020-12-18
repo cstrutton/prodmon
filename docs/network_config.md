@@ -26,7 +26,6 @@ For Seeed NPI I.MX6ULL
  - take board home and update and install packages
     ```
     sudo apt-get update
-    sudo apt-get install -y python3 python3-pip git
     ```
 
  - after updating linux, configure PLC network as required

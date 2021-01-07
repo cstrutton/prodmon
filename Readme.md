@@ -15,6 +15,7 @@ sudo apt install -y python3 python3-pip python3-venv git python3-dev build-essen
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
 python3 -m venv venv            # create virtual env
+venv/bin/pip3 install wheel     # needed to bild wheels 
 venv/bin/pip3 install -e .      # install prodmon into it
 ```
 

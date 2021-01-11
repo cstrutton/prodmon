@@ -4,6 +4,7 @@
 See [docs/network_config.md](docs/network_config.md)
 
 #### Install required packages:
+Boot from SD card and install the required packages.  This way they are installed when the image is copied to the device.
 ```
 #currently does not work on Stackpole network.  Webfilter blocks apt.
 sudo apt-get update
@@ -20,15 +21,17 @@ venv/bin/pip3 install -e .      # install prodmon into it
 ```
 
 #### Install config files
+```
 sudo mkdir /etc/prodmon
-sudo ln -sfv ./configs/<active_config>-collect.yml /etc/prodmon/collect.config
-sudo ln -sfv ./configs/generic-post.yml /etc/prodmon/post.config
+sudo cp ./configs/[config] /etc/prodmon/collect.config
+sudo cp ./configs/generic-post.yml /etc/prodmon/post.config
+```
 
 #### Add Service Files:
 ```
 # copy service files to config directory
-sudo cp service_files/<collect-service>.service /etc/systemd/system/collect.service
-sudo cp service_files/<post-service>.service /etc/systemd/system/post.service
+sudo cp service_files/collect.service /etc/systemd/system/collect.service
+sudo cp service_files/post.service /etc/systemd/system/post.service
 # sudo ln -f ./service_files/config.service /etc/systemd/system/config.service
 
 # enable services

@@ -3,8 +3,9 @@ minimum_cycle: .5
 tags:
   - type: pylogix                               # type = pylogix | modbus
     processor_ip: 192.168.100.30                # processor_ip is the controller's ip address
+    processor_slot: 0
     tag: Program:Cell_3.Total_RX_Part_Cnt.acc   # tag is the PLC tag to read
-    Part_Number: '50-8697'
+    Part_Number: '50-8670'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
@@ -16,8 +17,9 @@ tags:
 
   - type: pylogix                               # type = pylogix | modbus
     processor_ip: 192.168.100.30                # processor_ip is the controlle$
+    processor_slot: 0
     tag: Program:Cell_3.Total_DO_Part_Cnt.acc   # tag is the PLC tag to read
-    Part_Number: '50-8697'
+    Part_Number: '50-5404'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
@@ -29,8 +31,9 @@ tags:
 
   - type: pylogix                               # type = pylogix | modbus
     processor_ip: 192.168.100.30                # processor_ip is the controlle$
+    processor_slot: 0
     tag: Program:Cell_3.Total_10R_Part_Cnt.acc   # tag is the PLC tag to read
-    Part_Number: '50-8697'
+    Part_Number: '10R140'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
@@ -42,8 +45,9 @@ tags:
 
   - type: pylogix                               # type = pylogix | modbus
     processor_ip: 192.168.100.30                # processor_ip is the controlle$
+    processor_slot: 0
     tag: Program:Cell_3.Total_Input_Part_Cnt.acc   # tag is the PLC tag to read
-    Part_Number: '50-8697'
+    Part_Number: '50-5401'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to

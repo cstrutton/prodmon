@@ -1,4 +1,3 @@
-sqldir: /var/local/SQL/
 minimum_cycle: .5
 
 tags:

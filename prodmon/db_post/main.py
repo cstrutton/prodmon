@@ -12,7 +12,7 @@ logger = get_logger()
 
 def set_config_defaults(post_config):
     # Set default values for config keys
-    config_default(config, 'sqldir', "./tempSQL/")
+    config_default(post_config, 'sqldir', "./tempSQL/")
     config_default(post_config, 'polling_freq', 5)
 
     # testing values

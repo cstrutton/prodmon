@@ -1,15 +1,19 @@
 ## To setup on Seeed NPI I.MX6ULL board:
 
-### Networking:
-See [docs/network_config.md](docs/network_config.md)
-
-#### Install required packages:
-Boot from SD card and install the required packages.  This way they are installed when the image is copied to the device.
+### Create SD Card Image
+Get latest image from [Seeed](https://files.seeedstudio.com/linux/NPi+i.MX6ULL/imx6ull-debian-buster-console-armhf-latest-2gb.img.xz)
+Burn to an 8Gig SDCard using [Etcher](https://www.balena.io/etcher/)
+Boot the board from the card and install pre requisite packages:
 ```
-#currently does not work on Stackpole network.  Webfilter blocks apt.
 sudo apt-get update
 sudo apt install -y python3 python3-pip python3-venv git python3-dev build-essential
 ```
+After everything is installed, use `sudo fire-config` to burn the image to the board.  Once that is done, everytime the SDCard is booted, it will burn the image to the board.  
+
+ToDo:  Update procedure to clone and install production monitor to the image to save steps.
+
+### Networking:
+See [docs/network_config.md](docs/network_config.md)
 
 #### Clone and install Production Monitor
 ```

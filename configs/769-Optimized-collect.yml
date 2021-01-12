@@ -1,4 +1,3 @@
-sqldir: ./tempSQL/
 minimum_cycle: .5
 
 tags:

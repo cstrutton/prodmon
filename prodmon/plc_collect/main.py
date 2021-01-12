@@ -10,7 +10,7 @@ logger = get_logger()
 
 def set_config_defaults(config):
     # Set default values for config keys
-    config_default(config, 'sqldir', "./tempSQL")
+    config_default(config, 'sqldir', "./tempSQL/")
     config_default(config, 'minimum_cycle', .5)
 
 

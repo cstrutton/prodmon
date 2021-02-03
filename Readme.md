@@ -1,16 +1,8 @@
-## To setup on Seeed NPI I.MX6ULL board:
+## To set up on Seeed NPI I.MX6ULL board:
 
-### Create SD Card Image
-Get latest image from [Seeed](https://files.seeedstudio.com/linux/NPi+i.MX6ULL/imx6ull-debian-buster-console-armhf-latest-2gb.img.xz)
-Burn to an 8Gig SDCard using [Etcher](https://www.balena.io/etcher/)
-Boot the board from the card and install pre requisite packages:
-```
-sudo apt-get update
-sudo apt install -y python3 python3-pip python3-venv git python3-dev build-essential
-```
-After everything is installed, use `sudo fire-config` to burn the image to the board.  Once that is done, everytime the SDCard is booted, it will burn the image to the board.  
+### Prepare SD Card
+see [docs/sdcard.md](docs/sdcard.md)
 
-ToDo:  Update procedure to clone and install production monitor to the image to save steps.
 
 ### Networking:
 See [docs/network_config.md](docs/network_config.md)
@@ -27,8 +19,8 @@ venv/bin/pip3 install -e .      # install prodmon into it
 #### Install config files
 ```
 sudo mkdir /etc/prodmon
-sudo cp ./configs/[config] /etc/prodmon/collect.config
 sudo cp ./configs/generic-post.yml /etc/prodmon/post.config
+sudo cp ./configs/[config] /etc/prodmon/collect.config
 ```
 
 #### Add Service Files:
@@ -50,7 +42,7 @@ sudo systemctl daemon-reload
 ## Static IP addresses:
 See [docs/mac-ip-addresses.md](docs/mac-ip-addresses.md)
 
-## Add log-in status check to to .bashrc ##
+## Add log-in status check to .bashrc ##
 
 ```
 tee -a .bashrc <<EOF

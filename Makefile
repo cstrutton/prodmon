@@ -1,2 +1,2 @@
-setplcip:
-	./scripts/setplcip.sh
+configure:
+	./scripts/configure.sh

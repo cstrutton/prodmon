@@ -1,0 +1,2 @@
+setplcip:
+	./scripts/setplcip.sh

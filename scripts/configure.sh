@@ -9,8 +9,10 @@ fi
 set_plc_network () {
   echo "Set PLC Network"
 
-  local IP=$(ip addr show eth1 | grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -o "[0-9]*\.[0-9]*$
-  read -e -i "$IP" -p 'PLC IP Address: ' IP
+  local IP=$ip addr show eth1 |\
+           grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" |\
+           grep -o "[0-9]*\.[0-9]*$"
+  read -e -i "$IP" -p "PLC IP Address: " IP
 
   local NETMASK=$(ifconfig eth1 | awk '/netmask/{split($4,a,":"); print a[1]}')
   read -e -i "$NETMASK" -p 'PLC Netmask: ' NETMASK
@@ -75,9 +77,9 @@ select_config_files() {
   # allow the user to choose a file
   select filename in ./configs/*-collect.yml; do
     # leave the loop if the user says 'stop'
-    if [[ "$REPLY" == stop ]]; then break; fi
+    if [[ $REPLY == stop ]]; then break; fi
     # complain if no file was selected, and loop to ask again
-    if [[ "$filename" == "" ]]; then
+    if [[ $filename == "" ]]; then
       echo "'$REPLY' is not a valid choice"
       continue
     fi

@@ -88,19 +88,22 @@ select_config_files() {
   done
 }
 
+print_menu () {
+  echo "Please Select:"
+  for index in "${!1[@]}"
+  do
+    printf "%s\t%s\n" "$index" "${1[$index]}"
+  done
+}
 
 while true; do
   clear
-  cat << _EOF_
-Please Select:
 
-1. Set PLC Network
-2. Set Plant Network
-3. Install Config Files
-4. Install Service Files
-0. Quit
-
-_EOF_
+  MENU=("Set PLC Network" \
+        "Set Plant Network" \
+        "Install Config Files" \
+        "Install Service Files")
+  print_menu $MENU
 
   read choice;
 
@@ -114,38 +117,8 @@ _EOF_
     3) select_config_files() 
        ;;
 
-    4) echo "Choice 4"
-
-       files=( ./configs/*-collect.yml )
-       shopt -s extglob
-
-       string="@(${files[0]}"
-       for((i=1;i<${#files[@]};i++))
-       do
-         string+="|${files[$i]}"
-       done
-       ## Close the parenthesis. $string is now @(file1|file2|...|fileN)
-       string+=")"
-
-       select file in "${files[@]}" "Skip"; do
-         case $file in
-           $string)
-             echo "$file"
-             break
-             ;;
-           *)
-             echo "Skipping Collect Config"
-             break
-             ;;
-         esac
-       done
-       ;;
-
-    5) echo "Choice 5"
-       ;;
-
     0) break
-
+      ;;
   esac
 done
 

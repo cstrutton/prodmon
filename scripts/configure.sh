@@ -131,7 +131,7 @@ configure_service_files() {
            local NEW_MODE="enable"
          else
            local NEW_MODE="disable"
-         if
+         fi
          printf "%s Collect Service: " ${NEW_MODE^}
          systemctl $NEW_MODE collect.service
          printf "%d\n" $?
@@ -148,7 +148,7 @@ configure_service_files() {
            local NEW_MODE="enable"
          else
            local NEW_MODE="disable"
-         if
+         fi
          printf "%s Post Service: " ${NEW_MODE^}
          systemctl $NEW_MODE post.service
          printf "%d\n" $?

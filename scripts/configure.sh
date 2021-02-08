@@ -6,18 +6,30 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+print_menu () {
+  local MENU=("$@")
+  for index in "${!MENU[@]}"; do
+    printf "%s) %s\n" $(( $index+1 )) "${MENU[$index]}"
+  done
+  printf "Enter to continue:"
+  read choice
+  return $(( choice ))
+}
+
 set_plc_network () {
   echo "Set PLC Network"
 
-  local IP=$ip addr show eth1 |\
+  local IP=$(ip addr show eth1 |\
            grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" |\
-           grep -o "[0-9]*\.[0-9]*$"
+           grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*")
   read -e -i "$IP" -p "PLC IP Address: " IP
 
   local NETMASK=$(ifconfig eth1 | awk '/netmask/{split($4,a,":"); print a[1]}')
   read -e -i "$NETMASK" -p 'PLC Netmask: ' NETMASK
 
-  echo "connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}"
+  echo "Executing: connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}"
+  connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}
+  echo "Result: "$?
 }
 
 set_plant_network () {
@@ -45,82 +57,54 @@ set_plant_network () {
                       grep -Po '\[\K[^]]*' ${NAMESERVERS} | tr -d ',')
   read -e -i "$NAMESERVERS" -p 'Nameservers: '
 
-  echo connmanctl config ${SERVICE_NAME} \
-                  --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} \
-                  --nameservers ${NAMESERVERS}
+  echo "Executing: connmanctl config ${SERVICE_NAME} --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} --nameservers ${NAMESERVERS}"
+  echo "Result: "$?
 }
 
-select_config_files() {
-  echo "Select Config Files:"
-  echo "Collect Configuration:"
-  # set the prompt used by select, replacing "#?"
-  PS3="Use number to select a file or 'stop' to cancel: "
-  # allow the user to choose a file
-  select filename in ./configs/*-collect.yml; do
-    # leave the loop if the user says 'stop'
-    if [[ "$REPLY" == stop ]]; then break; fi
-    # complain if no file was selected, and loop to ask again
-    if [[ "$filename" == "" ]]; then
-      echo "'$REPLY' is not a valid choice"
-      continue
-    fi
+select_collect_config_file() {
+  echo "Load Collect Configuration from:"
+  local FILES=(./configs/*-collect.yml)
+  print_menu "${FILES[@]}"
 
-    # now we can use the selected file
-    echo "$filename installed"
-    # it'll ask for another unless we leave the loop
-    break
-  done
+  local result=$(( $? )) # converts to positive int or zero
 
-  echo "Select a post configuration"
-  # set the prompt used by select, replacing "#?"
-  PS3="Use number to select a file or 'stop' to cancel: "
-  # allow the user to choose a file
-  select filename in ./configs/*-collect.yml; do
-    # leave the loop if the user says 'stop'
-    if [[ $REPLY == stop ]]; then break; fi
-    # complain if no file was selected, and loop to ask again
-    if [[ $filename == "" ]]; then
-      echo "'$REPLY' is not a valid choice"
-      continue
-    fi
-    # now we can use the selected file
-    echo "$filename installed"
-    # it'll ask for another unless we leave the loop
-    break
-  done
+  if ! [[ $result == 0 ]]
+    then
+    local FILENAME=${FILES[((++result))
+  fi
 }
 
-print_menu () {
-  echo "Please Select:"
-  for index in "${!1[@]}"
-  do
-    printf "%s\t%s\n" "$index" "${1[$index]}"
-  done
+select_post_config_file() {
+  echo "Load Post Configuration from:"
+  local FILES=(./configs/*-post.yml)
+  print_menu "${FILES[@]}"
+  echo $?
 }
 
+clear
 while true; do
-  clear
-
-  MENU=("Set PLC Network" \
-        "Set Plant Network" \
-        "Install Config Files" \
-        "Install Service Files")
-  print_menu $MENU
-
-  read choice;
-
-  case $choice in
-    1) set_plc_network()
+  MENU=("Set PLC Network"\
+        "Set Plant Network"\
+         "Install Collect Configuration"\
+         "Install Post Cofiguration"\
+         "Install Config Service"\
+         "Install Post Service")
+  print_menu "${MENU[@]}"
+  case $? in
+    1) set_plc_network
        ;;
 
-    2) set_plant_network()
+    2) set_plant_network
        ;;
 
-    3) select_config_files() 
+    3) select_collect_config_file
+       ;;
+
+    3) select_post_config_file
        ;;
 
     0) break
-      ;;
+       ;;
   esac
 done
 

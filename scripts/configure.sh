@@ -16,8 +16,18 @@ print_menu() {
   return $(( choice ))
 }
 
+areyousure() {
+  local response=0
+  read -p "$*" -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  then
+    return 1
+  fi
+}
+
 set_plc_network() {
-  echo "Set PLC Network"
+  printf "\n\nConfigure PLC Network\n"
 
   local IP=$(ip addr show eth1 |\
            grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" |\
@@ -27,13 +37,15 @@ set_plc_network() {
   local NETMASK=$(ifconfig eth1 | awk '/netmask/{split($4,a,":"); print a[1]}')
   read -e -i "$NETMASK" -p 'PLC Netmask: ' NETMASK
 
-  echo "Executing: connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}"
-  connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}
-  echo "Result: "$?
+  printf "Execute: connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}\n"
+  if areyousure "Proceed?:[yN]"; then
+    connmanctl config ethernet_dead12345678_cable --ipv4 manual ${IP} ${NETMASK}
+    printf "Command returned: %d\n" $?
+  fi
 }
 
 set_plant_network() {
-  echo "Set PLANT Network"
+  printf "\n\nConfigure Plant Network\n"
 
   local MAC=$(cat /sys/class/net/eth2/address | tr -d ':')
   local SERVICE_NAME="ethernet_${MAC}_cable"
@@ -57,13 +69,17 @@ set_plant_network() {
                       grep -Po '\[\K[^]]*' ${NAMESERVERS} | tr -d ',')
   read -e -i "$NAMESERVERS" -p 'Nameservers: '
 
-  echo "Executing: connmanctl config ${SERVICE_NAME} --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} --nameservers ${NAMESERVERS}"
-  connmanctl config ${SERVICE_NAME} --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} --nameservers ${NAMESERVERS}
-  echo "Result: "$?
+  printf "Execute: connmanctl config ${SERVICE_NAME} --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} --nameservers ${NAMESERVERS}\n"
+  if areyousure "Proceed?:[yN]"; then
+    connmanctl config ${SERVICE_NAME} --ipv4 manual ${IP} ${NETMASK} ${GATEWAY} --nameservers ${NAMESERVERS}
+    printf "Command returned: %d\n" $?
+  fi
 }
 
 set_configuration_files() {
   while true; do
+    printf "\n\nInstall Configuration Files\n"
+
     MENU=("Choose Collect Configuration File"\
           "Choose Post Configuration File")
     print_menu "${MENU[@]}"
@@ -73,18 +89,22 @@ set_configuration_files() {
          local FILES=(./configs/*-collect.yml)
          print_menu "${FILES[@]}"
 
-         local result=$(( $? )) # converts bad characters to zero
+         local result=$?
+         if ! [[ "$result" =~ "^[0-9]+$" ]]
+           then
+           (( result = 0 ))
+         fi
 
-         if ! [[ $result == 0 ]]; then
+         if ! [[ result == 0 ]]; then
            local FILENAME=${FILES[((--result))]}
-           printf "Installing %s as /etc/prodmon/collect.config :" $FILENAME
+           printf "Installing %s as /etc/prodmon/collect.config\n" $FILENAME
            cp $FILENAME /etc/prodmon/collect.config
-           printf "%d\n\n" $?
+           printf "Command returned: %d\n\n" $?
 
            if (systemctl -q is-active collect.service); then
              printf "Restarting the Collect service: "
              systemctl restart collect
-             printf "%d\n\n" $?
+             printf "Command returned: %d\n\n" $?
            fi
          fi ;;
 
@@ -92,7 +112,11 @@ set_configuration_files() {
          local FILES=(./configs/*-post.yml)
          print_menu "${FILES[@]}"
 
-         local result=$(( $? )) # converts bad characters to zero
+         local result=$?
+         if ! [[ "$result" =~ "^[0-9]+$" ]]
+           then
+           (( result = 0 ))
+         fi
 
          if ! [[ $result == 0 ]]; then
            local FILENAME=${FILES[((--result))]}
@@ -113,11 +137,13 @@ set_configuration_files() {
 
 configure_service_files() {
   while true; do
+    printf "\nConfigure Systemd Services\n"
+
     local CHANGED=0
-    MENU=("Choose Collect Service Unit File"\
-          "Enable Collect Service to run at boot"\
-          "Choose Post Service Unit File"\
-          "Enable Post Service File to run at boot")
+    MENU=("Install Collect Service Unit File"\
+          "Enable/Disable Collect Service to run at boot"\
+          "Install Post Service Unit File"\
+          "Enable/Disable Post Service File to run at boot")
     print_menu "${MENU[@]}"
     case $? in
       1) printf "Copying Collect Service Unit File: "
@@ -125,39 +151,46 @@ configure_service_files() {
          printf "%d\n" $?
          (( CHANGED++ )) ;;
 
-      2) systemctl is-enabled collect.service
+      2) systemctl is-enabled collect.service --quiet
          local ENABLED=$?
          if (( ENABLED == 0 )); then
+           local MODE="disabled"
            local NEW_MODE="enable"
          else
+           local MODE="enabled"
            local NEW_MODE="disable"
          fi
-         printf "%s Collect Service: " ${NEW_MODE^}
-         systemctl $NEW_MODE collect.service
-         printf "%d\n" $?
-         (( CHANGED++ )) ;;
+         printf "Collect Service is %s\n" $MODE
+         if areyousure "${NEW_MODE^} Collect Service? [yN]"; then
+           systemctl $NEW_MODE collect.service --quiet
+           systemctl is-enabled collect.service
+           (( CHANGED++ ))
+         fi ;;
 
       3) printf "Copying Post Service Unit File: "
          cp service_files/post.service /etc/systemd/system/post.service
          printf "%d\n" $?
          (( CHANGED++ )) ;;
 
-      4) systemctl is-enabled post.service
+      4) systemctl is-enabled post.service --quiet
          local ENABLED=$?
          if (( ENABLED == 0 )); then
            local NEW_MODE="enable"
          else
            local NEW_MODE="disable"
          fi
-         printf "%s Post Service: " ${NEW_MODE^}
-         systemctl $NEW_MODE post.service
-         printf "%d\n" $?
-         (( CHANGED++ )) ;;
+         printf "Post Service is %s\n" $MODE
+         if areyousure "${NEW_MODE^} Post Service? [yN]"; then
+           systemctl $NEW_MODE post.service --quiet
+           systemctl is-enabled post.service
+           (( CHANGED++ ))
+         fi ;;
 
       0) break ;;
+
     esac
     if (( CHANGED > 0 )); then
-      printf "Running systemclt daemon-reload: \n"
+      printf "Running systemclt daemon-reload: "
       systemctl daemon-reload
       printf "%d\n\n" $?
     fi
@@ -165,22 +198,18 @@ configure_service_files() {
 }
 
 force_reboot() {
-  while true; do
-    local yn=""
-    read -p "Do you want to reboot now?" yn
-    case $yn in
-        [Yy]* ) reboot now; break;;
-        [Nn]* ) return;;
-        * ) echo "Please answer yes or no.";;
-    esac
-  done
+  if areyousure "Reboot System Now? [yN]"; then
+    printf "Rebooting.... Wait 30 seconds before reconnecting"
+    reboot now
+  fi
 }
 
 clear
 while true; do
-  MENU=("Set PLC Network"\
-        "Set Plant Network"\
-        "Set Configuration Files"\
+  printf "\n"
+  MENU=("Configure PLC Network"\
+        "Configure Plant Network"\
+        "Install Configuration Files"\
         "Configure Service Unit Files"\
         "Force Reboot")
   print_menu "${MENU[@]}"

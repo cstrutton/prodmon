@@ -156,6 +156,7 @@ configure_service_files() {
          (( CHANGED++ )) ;;
 
       2) systemctl is-enabled collect.service --quiet
+         printf "%s" $?
          local ENABLED=$?
          if (( ENABLED == 0 )); then
            local MODE="disabled"

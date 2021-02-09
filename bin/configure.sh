@@ -67,7 +67,7 @@ set_plant_network() {
 
   NAMESERVERS=$(connmanctl services "${SERVICE_NAME}" |\
                       awk '/Nameservers.Configuration/ {print}' |\
-                      grep -Po '\[\K[^]]*' "${NAMESERVERS}" | tr -d ',')
+                      grep -Po '\[\K[^]]*' | tr -d ',')
   read -er -i "$NAMESERVERS" -p 'Nameservers: '
 
   printf "Execute: connmanctl config %s --ipv4 manual %s %s %s --nameservers %s\n" \

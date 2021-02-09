@@ -156,9 +156,8 @@ configure_service_files() {
          (( CHANGED++ )) ;;
 
       2) systemctl is-enabled collect.service --quiet
-         printf "%s" $?
          local ENABLED=$?
-         if (( ENABLED == 0 )); then
+         if (( ENABLED == 1 )); then
            local MODE="disabled"
            local NEW_MODE="enable"
          else
@@ -179,7 +178,7 @@ configure_service_files() {
 
       4) systemctl is-enabled post.service --quiet
          local ENABLED=$?
-         if (( ENABLED == 0 )); then
+         if (( ENABLED == 1 )); then
            local NEW_MODE="enable"
          else
            local NEW_MODE="disable"

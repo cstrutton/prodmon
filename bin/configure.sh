@@ -141,9 +141,9 @@ set_configuration_files() {
 
 configure_service_files() {
   local CHANGED MENU MODE NEW_MODE ENABLED
+  CHANGED=0
   while true; do
     printf "\nConfigure Systemd Services\n"
-    CHANGED=0
     MENU=("Install Collect Service Unit File"\
           "Enable/Disable Collect Service to run at boot"\
           "Install Post Service Unit File"\

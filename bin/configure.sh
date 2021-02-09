@@ -12,7 +12,7 @@ print_menu() {
     printf "%s) %s\n" $(( index+1 )) "${MENU[$index]}"
   done
   printf "Enter to continue:"
-  read -r -n 1 choice
+  read -r choice
   return $(( choice ))
 }
 

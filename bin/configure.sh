@@ -140,7 +140,7 @@ set_configuration_files() {
 }
 
 configure_service_files() {
-  local CHANGED MENU
+  local CHANGED MENU MODE NEW_MODE ENABLED
   while true; do
     printf "\nConfigure Systemd Services\n"
     CHANGED=0
@@ -156,13 +156,13 @@ configure_service_files() {
          (( CHANGED++ )) ;;
 
       2) systemctl is-enabled collect.service --quiet
-         local ENABLED=$?
+         ENABLED=$?
          if (( ENABLED == 1 )); then
-           local MODE="disabled"
-           local NEW_MODE="enable"
+           MODE="disabled"
+           NEW_MODE="enable"
          else
-           local MODE="enabled"
-           local NEW_MODE="disable"
+           MODE="enabled"
+           NEW_MODE="disable"
          fi
          printf "Collect Service is %s\n" $MODE
          if areyousure "${NEW_MODE^} Collect Service? [yN]"; then
@@ -177,11 +177,13 @@ configure_service_files() {
          (( CHANGED++ )) ;;
 
       4) systemctl is-enabled post.service --quiet
-         local ENABLED=$?
+         ENABLED=$?
          if (( ENABLED == 1 )); then
-           local NEW_MODE="enable"
+           MODE="disabled"
+           NEW_MODE="enable"
          else
-           local NEW_MODE="disable"
+           MODE="enabled"
+           NEW_MODE="disable"
          fi
          printf "Post Service is %s\n" $MODE
          if areyousure "${NEW_MODE^} Post Service? [yN]"; then

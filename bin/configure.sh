@@ -192,7 +192,8 @@ configure_service_files() {
            (( CHANGED++ ))
          fi ;;
 
-      *) if (( CHANGED > 0 )); then
+      *) printf "CHANGED = %d\n" $CHANGED
+         if (( CHANGED > 0 )); then
            printf "Running systemclt daemon-reload: "
            systemctl daemon-reload
            printf "%d\n\n" $?

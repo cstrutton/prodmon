@@ -12,7 +12,7 @@ See [docs/network_config.md](docs/network_config.md)
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
 python3 -m venv venv            # create virtual env
-venv/bin/pip3 install wheel     # needed to bild wheels 
+venv/bin/pip3 install wheel     # needed to build wheels 
 venv/bin/pip3 install -e .      # install prodmon into it
 ```
 

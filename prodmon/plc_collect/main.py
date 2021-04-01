@@ -58,7 +58,7 @@ def read_pylogix_counter(counter_entry, config):
 
         logger.debug(f'Read counter:{part_count}, type:{part_type}')
 
-        count = part_count.Value * counter_entry.get('scale', 1)
+        count = part_count.Value * counter_entry.get('Scale', 1)
 
         if count == 0:
             counter_entry['lastcount'] = count

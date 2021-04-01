@@ -22,7 +22,7 @@ tags:
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
-    Machine: 1507                 # written to machine column in db
+    Machine: 1710                 # written to machine column in db
     # used internally to track the readings
     nextread: 0     # timestamp of the next reading
     lastcount: 0    # last counter value

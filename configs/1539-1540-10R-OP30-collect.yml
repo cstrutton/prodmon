@@ -6,7 +6,7 @@ tags:
     processor_slot: 0
     tag: ProdCount1539.acc        # tag is the PLC tag to read
     Part_Number: '50-9341'
-    Scale: 2			  # how many parts to count per cycle
+    Scale: 2                      # how many parts to count per cycle
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1539                 # written to machine column in db
@@ -20,7 +20,7 @@ tags:
     processor_slot: 0
     tag: ProdCount1540.acc        # tag is the PLC tag to read
     Part_Number: '50-9341'
-    Scale: 2
+    Scale: 2                      # how many parts to count per cycle
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1540                 # written to machine column in db

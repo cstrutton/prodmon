@@ -1,29 +1,28 @@
 minimum_cycle: .5
-
 tags:
-  - type: pylogix                 # type = pylogix | modbus
-    processor_ip: 192.168.1.110   # processor_ip is the controller's ip address
+  - type: pylogix                               # type = pylogix | modbus
+    processor_ip: 192.168.1.11                  # processor_ip is the controller's ip address
     processor_slot: 0
-    tag: ProdCount1539.acc        # tag is the PLC tag to read
-    Part_Number: '50-9341'
-    Scale: 2                      # how many parts to count per cycle
+    tag: PartCount1.acc                         # tag is the PLC tag to read
+    Part_Number: '50-5214'
+    Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
-    Machine: 1539                 # written to machine column in db
+    Machine: 1710                 # written to machine column in db
     # used internally to track the readings
     nextread: 0     # timestamp of the next reading
     lastcount: 0    # last counter value
     lastread: 0     # timestamp of the last read
 
-  - type: pylogix                 # type = pylogix | modbus
-    processor_ip: 192.168.1.110   # processor_ip is the controlle$
+  - type: pylogix                               # type = pylogix | modbus
+    processor_ip: 192.168.1.11                  # processor_ip is the controlle$
     processor_slot: 0
-    tag: ProdCount1540.acc        # tag is the PLC tag to read
-    Part_Number: '50-9341'
-    Scale: 2                      # how many parts to count per cycle
+    tag: PartCount2.acc   # tag is the PLC tag to read
+    Part_Number: '50-3214'
+    Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
-    Machine: 1540                 # written to machine column in db
+    Machine: 1710                 # written to machine column in db
     # used internally to track the readings
     nextread: 0     # timestamp of the next reading
     lastcount: 0    # last counter value

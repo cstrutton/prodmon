@@ -45,17 +45,26 @@ See [docs/mac-ip-addresses.md](docs/mac-ip-addresses.md)
 ## Add log-in status check to .bashrc ##
 
 ```
-tee -a .bashrc <<EOF
+statuscollect () {
+  if (systemctl -q is-active collect.service)
+      then
+      echo "Collect service is running."
+      else
+      echo "Collect service is not running."
+  fi
+}
 
-if (systemctl -q is-active collect.service)
-    then
-    echo "Collect service is running."
-fi
+statuspost () {
+  if (systemctl -q is-active post.service)
+      then
+      echo "Post service is running."
+      else
+      echo "Post service is not running."
+  fi
+}
 
-if (systemctl -q is-active post.service)
-    then
-    echo "Post service is running."
-fi
-
-EOF
+timedatectl status
+statuscollect
+statuspost
+journalctl -f -u collect -u post
 ``` 

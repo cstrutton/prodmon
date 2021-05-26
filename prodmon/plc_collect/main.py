@@ -93,8 +93,15 @@ def part_count_entry(counter_entry, count, parttype, config):
     file_path = f'{config["sqldir"]}{str(int(timestamp))}.sql'
 
     with open(file_path, "a+") as file:
-        sql = (f'INSERT INTO {table} (Machine, Part, PerpetualCount, Timestamp) '
-               f'VALUES ("{machine}" ,"{parttype}" ,{count}, {timestamp});\n')
+        sql = f'INSERT INTO {table} '
+        sql += f'(Machine, '
+        if parttype :
+            sql += f'Part, '
+        sql += f'PerpetualCount, Timestamp) '
+        sql += f'VALUES ("{machine}" ,'
+        if parttype :
+            sql += f'"{parttype}" '
+        sql += f',{count}, {timestamp});\n'
         file.write(sql)
 
 

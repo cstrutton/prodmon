@@ -124,7 +124,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         config['tags'] = [self.simple_counter_entry]
 
         config['tags'][0]['lastcount'] = LAST_PART_COUNT * TEST_SCALE
-        config['tags'][0]['scale'] = TEST_SCALE
+        config['tags'][0]['Scale'] = TEST_SCALE
 
         part_count_res = Response(
             tag_name=config['tags'][0]['tag'], value=PART_COUNT, status='Success')
@@ -133,7 +133,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
         read_pylogix_counter(config['tags'][0], config)
 
-        self.assertEqual( mock_part_count_entry.call_count, TEST_SCALE)
+        self.assertEqual(mock_part_count_entry.call_count, TEST_SCALE)
 
 
 if __name__ == '__main__':

@@ -12,6 +12,10 @@ def set_config_defaults(config):
     # Set default values for config keys
     config_default(config, 'sqldir', "./tempSQL/")
     config_default(config, 'minimum_cycle', .5)
+    config_default(config, 'Part_Number', '')
+    config_default(config, 'nextread', 0)
+    config_default(config, 'lastcount', 0)
+    config_default(config, 'lastread', 0)
 
 
 def loop(config):

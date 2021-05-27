@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open
 
-from prodmon.plc_collect.main import part_count_entry
+from prodmon.plc_collect.main import part_count_entry_sql
 
 
 class ReadPylogixCounterTestSuit(unittest.TestCase):
@@ -40,31 +40,12 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
     def test_no_part_number_in_config(self):
         # create the counter entry
-        config = self.test_config
-        config['tags'] = [self.pylogix_entry]
+        counter_entry = self.pylogix_entry
 
-        config['tags'][0]['Part_Number'] = ''
-        config['tags'][0]['lastread'] = '1234567890'
-
-        counter_entry = config['tags'][0]
+        counter_entry['Part_Number'] = ''
+        counter_entry['lastread'] = '1234567890'
 
         count = 1
-        part_number = counter_entry['Part_Number']
 
-        with patch('prodmon.plc_collect.main.open', mock_open()) as mocked_file:
-            # call part_count_entry
-            part_count_entry(counter_entry, count, part_number, config)
-
-            table = counter_entry['table']
-            timestamp = counter_entry['lastread']
-            machine = counter_entry['Machine']
-
-            sql = f'INSERT INTO {table} '
-            sql += f'(Machine, '
-            sql += f'PerpetualCount, Timestamp) '
-            sql += f'VALUES ("{machine}" ,'
-            sql += f',{count}, {timestamp});\n'
-
-            # assert if write(content) was called from the file opened
-            # in another words, assert if the specific content was written in file
-            mocked_file().write.assert_called_once_with(sql)
+        result = part_count_entry_sql(counter_entry, count)
+        self.assertNotIn('Part', result)

@@ -58,8 +58,6 @@ def read_pylogix_counter(counter_entry, config):
             logger.error('Failed to read ', part_count)
             return
 
-        part_type = counter_entry['Part_Number']
-
         logger.debug(f'Read counter:{part_count}, type:{part_type}')
 
         count = part_count.Value * counter_entry.get('Scale', 1)
@@ -73,36 +71,43 @@ def read_pylogix_counter(counter_entry, config):
             logger.info('First pass through')
 
         if count > counter_entry['lastcount']:
-            for entry in range(counter_entry['lastcount'] + 1, count + 1):
-
-                part_count_entry(
-                    counter_entry=counter_entry,
-                    count=entry,
-                    parttype=part_type,
-                    config=config
-                )
-                logger.info(f'Creating entry for part#{entry}')
+            for part_count_entry in range(counter_entry['lastcount'] + 1, count + 1):
+                create_part_count_entry(counter_entry, part_count_entry, config)
+                logger.info(f'Creating entry for part#{part_count_entry}')
             counter_entry['lastcount'] = count
 
 
-def part_count_entry(counter_entry, count, parttype, config):
+def create_part_count_entry(counter_entry, count, config):
+    timestamp = str(int(counter_entry['lastread']))
+    file_path = f'{config["sqldir"]}{timestamp}.sql'
+    sql = part_count_entry_sql(counter_entry, count)
+    write_sql_file(sql, file_path)
 
+
+def part_count_entry_sql(counter_entry, count):
+    part_number = counter_entry.get('Part_Number')
     table = counter_entry['table']
     timestamp = counter_entry['lastread']
     machine = counter_entry['Machine']
-    file_path = f'{config["sqldir"]}{str(int(timestamp))}.sql'
 
-    with open(file_path, "a+") as file:
-        sql = f'INSERT INTO {table} '
-        sql += f'(Machine, '
-        if parttype :
-            sql += f'Part, '
-        sql += f'PerpetualCount, Timestamp) '
-        sql += f'VALUES ("{machine}" ,'
-        if parttype :
-            sql += f'"{parttype}" '
-        sql += f',{count}, {timestamp});\n'
+    sql = f'INSERT INTO {table} '
+    sql += f'(Machine, '
+    if part_number:
+        sql += f'Part, '
+    sql += f'PerpetualCount, Timestamp) '
+    sql += f'VALUES ("{machine}" ,'
+    if part_number:
+        sql += f'"{part_number}" '
+    sql += f',{count}, {timestamp});\n'
+
+    return sql
+
+
+def write_sql_file(sql, path):
+    with open(path, "a+") as file:
         file.write(sql)
+
+
 
 
 @logger.catch()

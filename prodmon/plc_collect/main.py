@@ -13,9 +13,10 @@ def set_config_defaults(config):
     config_default(config, 'sqldir', "./tempSQL/")
     config_default(config, 'minimum_cycle', .5)
     config_default(config, 'Part_Number', '')
-    config_default(config, 'nextread', 0)
-    config_default(config, 'lastcount', 0)
-    config_default(config, 'lastread', 0)
+    for tag in config['tags']:
+        config_default(tag, 'nextread', 0)
+        config_default(tag, 'lastcount', 0)
+        config_default(tag, 'lastread', 0)
 
 
 def loop(config):

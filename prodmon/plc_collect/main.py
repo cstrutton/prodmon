@@ -58,7 +58,7 @@ def read_pylogix_counter(counter_entry, config):
             logger.error('Failed to read ', part_count)
             return
 
-        logger.debug(f'Read counter:{part_count}, type:{part_type}')
+        logger.debug(f'Read counter:{part_count}, tag:{counter_entry["tag"]}')
 
         count = part_count.Value * counter_entry.get('Scale', 1)
 

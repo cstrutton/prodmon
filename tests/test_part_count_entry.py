@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch, mock_open
 
 from prodmon.plc_collect.main import part_count_entry_sql
 
@@ -32,10 +31,10 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
             'Scale': 1
         }
 
-        self.test_config = {
+        self.pylogix_test_config = {
             'sqldir': "./tempSQL/",
             'minimum_cycle': 1,
-            'tags': []
+            'tags': [self.pylogix_entry]
         }
 
     def test_no_part_number_in_config(self):
@@ -49,3 +48,16 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
         result = part_count_entry_sql(counter_entry, count)
         self.assertNotIn('Part', result)
+
+    def test_with_part_number_in_config(self):
+        # create the counter entry
+        counter_entry = self.pylogix_entry
+
+        counter_entry['Part_Number'] = 'TestPartNumber'
+        counter_entry['lastread'] = '1234567890'
+
+        count = 1
+
+        result = part_count_entry_sql(counter_entry, count)
+        self.assertIn('Part', result)
+        self.assertIn(counter_entry['Part_Number'], result)

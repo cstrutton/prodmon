@@ -48,7 +48,7 @@ class MainLoopTestSuit(unittest.TestCase):
         """
         config = self.test_config
         config['minimum_cycle'] = 1
-        config['tags'][0]['type'] = 'pylogix_typed_counter'
+        config['tags'][0]['type'] = 'pylogix'
 
         loop(config)
         loop(config)
@@ -67,7 +67,7 @@ class MainLoopTestSuit(unittest.TestCase):
         config = self.test_config
         minimum_cycle = 1
         config['minimum_cycle'] = minimum_cycle
-        config['tags'][0]['type'] = 'pylogix_typed_counter'
+        config['tags'][0]['type'] = 'pylogix'
 
 
         loop(config)
@@ -91,7 +91,7 @@ class MainLoopTestSuit(unittest.TestCase):
         config = self.test_config
         minimum_cycle = 1
         config['minimum_cycle'] = minimum_cycle
-        config['tags'][0]['type'] = 'pylogix_typed_counter'
+        config['tags'][0]['type'] = 'pylogix'
 
         config['tags'][0]['nextread'] = 0
 

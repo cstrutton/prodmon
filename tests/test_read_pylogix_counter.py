@@ -27,15 +27,9 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
             'lastcount': 0,  # last counter value
             'lastread': 0  # timestamp of the last read
         }
-        self.typed_counter_entry = {
+        self.pylogix_counter_entry = {
             **self.counter_entry,
-            'type': 'pylogix_typed_counter',
-            'Part_Type_Tag': 'Line.PartType',
-            'Part_Type_Map': {'1': 'PartType1', '2': 'PartType2'}
-        }
-        self.simple_counter_entry = {
-            **self.counter_entry,
-            'type': 'pylogix_simple_counter',
+            'type': 'pylogix',
             'Part_Number': 'SimplePartType',
             'Scale': 1
         }
@@ -45,7 +39,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
             'tags': []
         }
 
-    @patch("prodmon.plc_collect.main.part_count_entry")
+    @patch("prodmon.plc_collect.main.create_part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")
     def test_first_pass_through(self, mock_pylogix_Read, mock_part_count_entry):
         """
@@ -58,7 +52,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         PART_TYPE = '1'
 
         config = self.test_config
-        config['tags'] = [self.typed_counter_entry]
+        config['tags'] = [self.pylogix_counter_entry]
 
         config['tags'][0]['lastcount'] = LAST_PART_COUNT
 
@@ -77,7 +71,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
         mock_part_count_entry.assert_not_called()
 
-    @patch("prodmon.plc_collect.main.part_count_entry")
+    @patch("prodmon.plc_collect.main.create_part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")
     def test_read_zero_part_count(self, mock_pylogix_Read, mock_part_count_entry):
         """
@@ -87,19 +81,16 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         """
         LAST_PART_COUNT = 250
         PART_COUNT = 0
-        PART_TYPE: str = '1'
 
         config = self.test_config
-        config['tags'] = [self.typed_counter_entry]
+        config['tags'] = [self.pylogix_counter_entry]
 
         config['tags'][0]['lastcount'] = LAST_PART_COUNT
 
         part_count_res = Response(
             tag_name=config['tags'][0]['tag'], value=PART_COUNT, status='Success')
-        part_type_res = Response(
-            tag_name=config['tags'][0]['tag'], value=PART_TYPE, status='Success')
 
-        mock_pylogix_Read.side_effect = [part_count_res, part_type_res, part_count_res, part_type_res]
+        mock_pylogix_Read.side_effect = [part_count_res, part_count_res]
 
         read_pylogix_counter(config['tags'][0], config)
         read_pylogix_counter(config['tags'][0], config)
@@ -108,7 +99,8 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
 
         mock_part_count_entry.assert_not_called()
 
-    @patch("prodmon.plc_collect.main.part_count_entry")
+    # create_part_count_entry(counter_entry, count, config):
+    @patch("prodmon.plc_collect.main.create_part_count_entry")
     @patch("prodmon.plc_collect.main.PLC.Read")
     def test_read_with_scaling(self, mock_pylogix_Read, mock_part_count_entry):
         """
@@ -121,7 +113,7 @@ class ReadPylogixCounterTestSuit(unittest.TestCase):
         PART_COUNT = LAST_PART_COUNT + 1
 
         config = self.test_config
-        config['tags'] = [self.simple_counter_entry]
+        config['tags'] = [self.pylogix_counter_entry]
 
         config['tags'][0]['lastcount'] = LAST_PART_COUNT * TEST_SCALE
         config['tags'][0]['Scale'] = TEST_SCALE

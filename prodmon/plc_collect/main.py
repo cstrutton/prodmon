@@ -41,40 +41,55 @@ def loop(config):
 
         entry['lastread'] = now
 
+        # get counter reading
+        count = -1
         if entry['type'] == 'pylogix':
-            read_pylogix_counter(entry, config)
+            count = read_pylogix_counter(entry)
+        if entry['type'] == 'modbus':
+            count = read_modbus_counter(entry)
+        if count == -1:
+            continue
+
+        # adjust for Scale factor
+        count = count * entry.get('Scale', 1)
+
+        # deal with counter == 0 edge case
+        if count == 0:
+            entry['lastcount'] = count
+            return  # machine count rolled over or is not running
+
+        if entry['lastcount'] == 0:  # first time through...
+            entry['lastcount'] = count
+            logger.info('First pass through')
+
+        if count > entry['lastcount']:
+            for part_count_entry in range(entry['lastcount'] + 1, count + 1):
+                create_part_count_entry(entry, part_count_entry, config)
+                logger.info(f'Creating entry for part#{part_count_entry}')
+            entry['lastcount'] = count
 
         # set the next read timestamp
         entry['nextread'] += frequency
 
 
-def read_pylogix_counter(counter_entry, config):
+def read_modbus_counter(entry):
+    return -1
+
+
+def read_pylogix_counter(counter_entry):
     with PLC() as comm:
         comm.IPAddress = counter_entry['processor_ip']
         comm.ProcessorSlot = counter_entry['processor_slot']
 
         part_count = comm.Read(counter_entry['tag'])
+
         if part_count.Status != 'Success':
             logger.error('Failed to read ', part_count)
-            return
+            return -1
 
-        logger.debug(f'Read counter:{part_count}, tag:{counter_entry["tag"]}')
+        logger.debug(f'Read pylogix counter:{part_count}, tag:{counter_entry["tag"]}')
 
-        count = part_count.Value * counter_entry.get('Scale', 1)
-
-        if count == 0:
-            counter_entry['lastcount'] = count
-            return  # machine count rolled over or is not running
-
-        if counter_entry['lastcount'] == 0:  # first time through...
-            counter_entry['lastcount'] = count
-            logger.info('First pass through')
-
-        if count > counter_entry['lastcount']:
-            for part_count_entry in range(counter_entry['lastcount'] + 1, count + 1):
-                create_part_count_entry(counter_entry, part_count_entry, config)
-                logger.info(f'Creating entry for part#{part_count_entry}')
-            counter_entry['lastcount'] = count
+    return part_count.Value
 
 
 def create_part_count_entry(counter_entry, count, config):
@@ -106,8 +121,6 @@ def part_count_entry_sql(counter_entry, count):
 def write_sql_file(sql, path):
     with open(path, "a+") as file:
         file.write(sql)
-
-
 
 
 @logger.catch()

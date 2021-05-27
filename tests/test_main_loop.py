@@ -11,7 +11,7 @@ class MainLoopTestSuit(unittest.TestCase):
     def setUp(self):
         self.counter_entry = {
             # type = counter|value
-            'type': 'pylogix_typed_counter',
+            'type': 'pylogix',
             # processor_ip is the controller's ip address
             'processor_ip': '127.0.0.1',
             # processor_slot is the controller's slot
@@ -46,6 +46,7 @@ class MainLoopTestSuit(unittest.TestCase):
         - try reading twice back to back (mocked read is almost instantainious)
         - should call read counter exactly one time
         """
+        mock_read_counter.return_value = [1, 2]
         config = self.test_config
         config['minimum_cycle'] = 1
         config['tags'][0]['type'] = 'pylogix'
@@ -63,12 +64,11 @@ class MainLoopTestSuit(unittest.TestCase):
         - try looping 3 times waiting for half minimum cycle between each
         - should call read counter exactly 2 times
         """
-
+        mock_read_counter.return_value = [1, 2]
         config = self.test_config
         minimum_cycle = 1
         config['minimum_cycle'] = minimum_cycle
         config['tags'][0]['type'] = 'pylogix'
-
 
         loop(config)
 
@@ -88,6 +88,8 @@ class MainLoopTestSuit(unittest.TestCase):
         Tests first pass behaviour
 
         """
+        mock_read_counter.return_value = 1
+
         config = self.test_config
         minimum_cycle = 1
         config['minimum_cycle'] = minimum_cycle
@@ -98,6 +100,54 @@ class MainLoopTestSuit(unittest.TestCase):
         loop(config)
 
         self.assertNotEqual(config['tags'][0]['nextread'], 0)
+
+    @patch("prodmon.plc_collect.main.create_part_count_entry")
+    @patch("prodmon.plc_collect.main.read_pylogix_counter")
+    def test_read_zero_part_count(self, mock_read_pylogix_counter, mock_part_count_entry):
+        """
+        Tests ignoring zero part count readings
+        Call read twice with 0 as a response
+
+        """
+
+        mock_read_pylogix_counter.side_effect = [0, 0]
+        LAST_PART_COUNT = 250
+        PART_COUNT = 0
+
+        config = self.test_config
+
+        config['tags'][0]['lastcount'] = LAST_PART_COUNT
+
+        loop(config)
+        loop(config)
+
+        self.assertEqual(config['tags'][0]['lastcount'], PART_COUNT)
+
+        mock_part_count_entry.assert_not_called()
+
+    # create_part_count_entry(counter_entry, count, config):
+    @patch("prodmon.plc_collect.main.create_part_count_entry")
+    @patch("prodmon.plc_collect.main.read_pylogix_counter")
+    def test_read_with_scaling(self, mock_read_pylogix_counter, mock_part_count_entry):
+        """
+        Tests reading with scaling
+        Read one part with a scale of 2
+        Should call part_count_entry 2 times
+        """
+        TEST_SCALE = 2
+        LAST_PART_COUNT = 250
+        PART_COUNT = LAST_PART_COUNT + 1
+        mock_read_pylogix_counter.return_value = PART_COUNT
+
+        config = self.test_config
+
+        config['tags'][0]['lastcount'] = LAST_PART_COUNT * TEST_SCALE
+        config['tags'][0]['Scale'] = TEST_SCALE
+
+        loop(config)
+
+        self.assertEqual(mock_part_count_entry.call_count, TEST_SCALE)
+
 
 
 if __name__ == '__main__':

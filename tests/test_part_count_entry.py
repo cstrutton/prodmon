@@ -3,7 +3,7 @@ import unittest
 from prodmon.plc_collect.main import part_count_entry_sql
 
 
-class ReadPylogixCounterTestSuit(unittest.TestCase):
+class PartCountEntryTestSuit(unittest.TestCase):
 
     def setUp(self):
         self.counter_entry = {

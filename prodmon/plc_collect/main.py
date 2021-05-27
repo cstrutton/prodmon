@@ -12,6 +12,10 @@ def set_config_defaults(config):
     # Set default values for config keys
     config_default(config, 'sqldir', "./tempSQL/")
     config_default(config, 'minimum_cycle', .5)
+    config_default(config, 'Part_Number', '')
+    config_default(config, 'nextread', 0)
+    config_default(config, 'lastcount', 0)
+    config_default(config, 'lastread', 0)
 
 
 def loop(config):
@@ -37,60 +41,85 @@ def loop(config):
 
         entry['lastread'] = now
 
+        # get counter reading
+        count = -1
         if entry['type'] == 'pylogix':
-            read_pylogix_counter(entry, config)
+            count = read_pylogix_counter(entry)
+        if entry['type'] == 'modbus':
+            count = read_modbus_counter(entry)
+        if count == -1:
+            continue
+
+        # adjust for Scale factor
+        count = count * entry.get('Scale', 1)
+
+        # deal with counter == 0 edge case
+        if count == 0:
+            entry['lastcount'] = count
+            return  # machine count rolled over or is not running
+
+        if entry['lastcount'] == 0:  # first time through...
+            entry['lastcount'] = count
+            logger.info('First pass through')
+
+        if count > entry['lastcount']:
+            for part_count_entry in range(entry['lastcount'] + 1, count + 1):
+                create_part_count_entry(entry, part_count_entry, config)
+                logger.info(f'Creating entry for part#{part_count_entry}')
+            entry['lastcount'] = count
 
         # set the next read timestamp
         entry['nextread'] += frequency
 
 
-def read_pylogix_counter(counter_entry, config):
+def read_modbus_counter(entry):
+    return -1
+
+
+def read_pylogix_counter(counter_entry):
     with PLC() as comm:
         comm.IPAddress = counter_entry['processor_ip']
         comm.ProcessorSlot = counter_entry['processor_slot']
 
         part_count = comm.Read(counter_entry['tag'])
+
         if part_count.Status != 'Success':
             logger.error('Failed to read ', part_count)
-            return
+            return -1
 
-        part_type = counter_entry['Part_Number']
+        logger.debug(f'Read pylogix counter:{part_count}, tag:{counter_entry["tag"]}')
 
-        logger.debug(f'Read counter:{part_count}, type:{part_type}')
-
-        count = part_count.Value * counter_entry.get('Scale', 1)
-
-        if count == 0:
-            counter_entry['lastcount'] = count
-            return  # machine count rolled over or is not running
-
-        if counter_entry['lastcount'] == 0:  # first time through...
-            counter_entry['lastcount'] = count
-            logger.info('First pass through')
-
-        if count > counter_entry['lastcount']:
-            for entry in range(counter_entry['lastcount'] + 1, count + 1):
-
-                part_count_entry(
-                    counter_entry=counter_entry,
-                    count=entry,
-                    parttype=part_type,
-                    config=config
-                )
-                logger.info(f'Creating entry for part#{entry}')
-            counter_entry['lastcount'] = count
+    return part_count.Value
 
 
-def part_count_entry(counter_entry, count, parttype, config):
+def create_part_count_entry(counter_entry, count, config):
+    timestamp = str(int(counter_entry['lastread']))
+    file_path = f'{config["sqldir"]}{timestamp}.sql'
+    sql = part_count_entry_sql(counter_entry, count)
+    write_sql_file(sql, file_path)
 
+
+def part_count_entry_sql(counter_entry, count):
+    part_number = counter_entry.get('Part_Number')
     table = counter_entry['table']
     timestamp = counter_entry['lastread']
     machine = counter_entry['Machine']
-    file_path = f'{config["sqldir"]}{str(int(timestamp))}.sql'
 
-    with open(file_path, "a+") as file:
-        sql = (f'INSERT INTO {table} (Machine, Part, PerpetualCount, Timestamp) '
-               f'VALUES ("{machine}" ,"{parttype}" ,{count}, {timestamp});\n')
+    sql = f'INSERT INTO {table} '
+    sql += f'(Machine, '
+    if part_number:
+        sql += f'Part, '
+    sql += f'PerpetualCount, Timestamp) '
+    sql += f'VALUES ("{machine}" ,'
+    if part_number:
+        sql += f'"{part_number}" '
+    sql += f',{count}, {timestamp});\n'
+
+    return sql
+
+
+def write_sql_file(sql, path):
+    with open(path, "a+") as file:
         file.write(sql)
 
 

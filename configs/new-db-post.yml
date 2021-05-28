@@ -6,4 +6,5 @@ dbconfig:
   user: prodmon
   password: pm258
   host: 10.4.1.245
+  port: 6601
 

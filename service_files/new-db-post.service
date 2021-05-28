@@ -5,7 +5,7 @@ Description=prodmon: post to db service
 [Service]
 # Command to execute when the service is started
 WorkingDirectory= /home/debian/prodmon/
-ExecStart=/home/debian/prodmon/venv/bin/python3 /home/debian/prodmon/prodmon/db_post/main.py 769-Optimized-collect-new
+ExecStart=/home/debian/prodmon/venv/bin/python3 /home/debian/prodmon/prodmon/db_post/main.py new-db-post
 Restart=always
 RestartSec=30s
 

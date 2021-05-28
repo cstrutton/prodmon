@@ -1,6 +1,6 @@
 .idea/
 templogs/*.log
-tempSQL/*.sql
+tempSQL*/*.sql
 venv/
 
 # Byte-compiled / optimized / DLL files

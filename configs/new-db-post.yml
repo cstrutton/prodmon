@@ -1,4 +1,4 @@
-sqldir: ./tempSQL/
+sqldir: ./tempSQL2/
 polling_freq: 2
 
 dbconfig:

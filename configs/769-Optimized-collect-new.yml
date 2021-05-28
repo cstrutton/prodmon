@@ -1,4 +1,5 @@
 minimum_cycle: .5
+sqldir: ./tempSQL2/
 
 tags:
   - type: pylogix                 # type = pylogix | modbus

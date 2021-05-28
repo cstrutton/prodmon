@@ -113,8 +113,8 @@ def part_count_entry_sql(counter_entry, count):
     sql += f'PerpetualCount, Timestamp) '
     sql += f'VALUES ("{machine}" ,'
     if part_number:
-        sql += f'"{part_number}" '
-    sql += f',{count}, {timestamp});\n'
+        sql += f'"{part_number} ," '
+    sql += f'{count}, {timestamp});\n'
 
     return sql
 

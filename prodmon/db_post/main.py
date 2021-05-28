@@ -10,6 +10,7 @@ from prodmon.shared.log_setup import get_logger
 
 logger = get_logger()
 
+
 def set_config_defaults(post_config):
     # Set default values for config keys
     config_default(post_config, 'sqldir', "./tempSQL/")

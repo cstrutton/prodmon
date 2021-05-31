@@ -102,6 +102,7 @@ def create_part_count_entry(counter_entry, count, config):
 
 def part_count_entry_sql(counter_entry, count):
     part_number = counter_entry.get('Part_Number')
+    extra_data = counter_entry.get('extra_data', '')
     table = counter_entry['table']
     timestamp = counter_entry['lastread']
     machine = counter_entry['Machine']
@@ -110,12 +111,15 @@ def part_count_entry_sql(counter_entry, count):
     sql += f'(Machine, '
     if part_number:
         sql += f'Part, '
+    if extra_data:
+        sql += f'extra_data, '
     sql += f'PerpetualCount, Timestamp) '
     sql += f'VALUES ("{machine}" ,'
     if part_number:
         sql += f'"{part_number}" , '
+    if extra_data:
+        sql += f'"{extra_data}", '
     sql += f'{count}, {timestamp});\n'
-
     return sql
 
 

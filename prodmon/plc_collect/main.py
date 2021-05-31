@@ -2,6 +2,8 @@ import os
 import time
 
 from pylogix import PLC
+from pyModbusTCP.client import ModbusClient
+
 from prodmon.shared.configuration_file import get_config, config_default
 from prodmon.shared.log_setup import get_logger
 
@@ -74,7 +76,9 @@ def loop(config):
 
 
 def read_modbus_counter(entry):
-    return -1
+    c = ModbusClient(host=entry['processor_ip'], auto_open=True, auto_close=True)
+    regs = c.read_holding_registers(entry['register'], 2)
+    return regs[0] + (regs[1] * 65536)
 
 
 def read_pylogix_counter(counter_entry):

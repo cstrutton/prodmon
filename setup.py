@@ -14,6 +14,7 @@ setup(
         'PyYAML~=5.3.1',
         'Flask~=1.1.2',
         'mysql-connector-python~=8.0.21',
-        'loguru'
+        'loguru',
+        'pyModbusTCP~=0.1.10'
     ]
 )

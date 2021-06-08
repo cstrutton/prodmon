@@ -5,7 +5,6 @@ tags:
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart22.acc'    # tag is the PLC tag to read
-    Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to
@@ -16,7 +15,6 @@ tags:
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read
-    Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to
@@ -27,7 +25,6 @@ tags:
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read
-    Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to
@@ -37,7 +34,6 @@ tags:
   - type: modbus                  # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 16                  # modbus register to read
-    Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Slurry    # database table to write to
@@ -47,7 +43,6 @@ tags:
   - type: modbus                  # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 18                  # modbus register to read
-    Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Slurry    # database table to write to

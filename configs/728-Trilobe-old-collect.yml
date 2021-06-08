@@ -9,7 +9,6 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
-    extra_data: 1                 # 1 = main line drop
 
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
@@ -19,7 +18,6 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
-    extra_data: 2                 # 2 = overflow drop
 
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
@@ -29,7 +27,6 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
-    extra_data: 3                 # 3 = reject drop
 
   - type: modbus                  # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
@@ -38,7 +35,6 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 650L                 # written to machine column in db
-    extra_data: 1                 # 1 = lh spindle
 
   - type: modbus                  # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
@@ -47,5 +43,4 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 650R                  # written to machine column in db
-    extra_data: 2                 # 2 = rh spindle
 

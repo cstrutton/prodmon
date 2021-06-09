@@ -4,7 +4,7 @@ tags:
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
-    tag: 'Program:Broach_Cell.CountPart22.acc'    # tag is the PLC tag to read
+    tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to
@@ -14,7 +14,7 @@ tags:
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
-    tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read
+    tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to
@@ -24,7 +24,7 @@ tags:
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
-    tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read
+    tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: prodmon_1467_Harden    # database table to write to

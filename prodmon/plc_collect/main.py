@@ -116,7 +116,7 @@ def part_count_entry_sql(counter_entry, count):
     if part_number:
         sql += f'Part, '
     if extra_data:
-        sql += f'extra_data, '
+        sql += f'ExtraData, '
     sql += f'PerpetualCount, Timestamp) '
     sql += f'VALUES ("{machine}" ,'
     if part_number:

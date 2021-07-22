@@ -14,7 +14,7 @@ For Seeed NPI I.MX6ULL
 - units are flashed so PLC MAC is DE:AD:12:34:56:78
 - Edge router sets fixed IP of 192.1687.1.254
 - ssh into 192.168.1.254
-- edit /boot/uEnv.txt and add inserting random mac address for the Plant network.
+- edit /boot/Env.txt and add inserting random mac address for the Plant network.
     ```
     # eth2
     # Plant port mac address

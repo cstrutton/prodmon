@@ -10,10 +10,6 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1617                 # written to machine colum in db
-    # used internally to track the readings
-    nextread: 0     # timestamp of the next reading
-    lastcount: 0    # last counter value
-    lastread: 0     # timestamp of the last read
 
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 10.4.42.135     # processor_ip is the controller's ip address
@@ -24,7 +20,3 @@ tags:
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1617                 # written to machine colum in db
-    # used internally to track the readings
-    nextread: 0     # timestamp of the next reading
-    lastcount: 0    # last counter value
-    lastread: 0     # timestamp of the last read

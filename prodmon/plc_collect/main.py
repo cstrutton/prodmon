@@ -44,57 +44,75 @@ def loop(config):
 
         entry['lastread'] = now
 
-        # get counter reading
         count = -1
         if entry['type'] == 'pylogix':
-            count = read_pylogix_counter(entry)
+            count = read_pylogix_tag(entry)
+            if count != -1:
+                process_counter(entry, count)
+
         if entry['type'] == 'modbus':
             count = read_modbus_counter(entry)
-        if count == -1:
-            continue
+            if count != -1:
+                process_counter(entry, count)
 
-        # adjust for Scale factor
-        count = count * entry.get('Scale', 1)
-
-        # deal with counter == 0 edge case
-        if count == 0:
-            entry['lastcount'] = count
-            return  # machine count rolled over or is not running
-
-        if entry['lastcount'] == 0:  # first time through...
-            entry['lastcount'] = count
-            logger.info('First pass through')
-
-        if count > entry['lastcount']:
-            for part_count_entry in range(entry['lastcount'] + 1, count + 1):
-                create_part_count_entry(entry, part_count_entry, config)
-                logger.info(f'Creating entry for part#{part_count_entry}')
-            entry['lastcount'] = count
+        if entry['type'] == 'pylogix_state':
+            state = read_pylogix_tag(entry)
+            if state != -1:
+                process_state(state, entry)
 
         # set the next read timestamp
         entry['nextread'] += frequency
 
 
+def read_pylogix_state(entry):
+    return -1
+
+
+def process_state(state, entry):
+    pass
+
+
+def process_counter(entry, count):
+    # adjust for Scale factor
+    count = count * entry.get('Scale', 1)
+
+    # deal with counter == 0 edge case
+    if count == 0:
+        entry['lastcount'] = count
+        return  # machine count rolled over or is not running
+
+    if entry['lastcount'] == 0:  # first time through...
+        entry['lastcount'] = count
+        logger.info('First pass through')
+
+    if count > entry['lastcount']:
+        for part_count_entry in range(entry['lastcount'] + 1, count + 1):
+            create_part_count_entry(entry, part_count_entry, config)
+            logger.info(f'Creating entry for part#{part_count_entry}')
+        entry['lastcount'] = count
+
+
+# TODO: add error checking and logging below
 def read_modbus_counter(entry):
     c = ModbusClient(host=entry['processor_ip'], auto_open=True, auto_close=True)
     regs = c.read_holding_registers(entry['register'], 2)
     return regs[0] + (regs[1] * 65536)
 
 
-def read_pylogix_counter(counter_entry):
+def read_pylogix_tag(entry):
     with PLC() as comm:
-        comm.IPAddress = counter_entry['processor_ip']
-        comm.ProcessorSlot = counter_entry['processor_slot']
+        comm.IPAddress = entry['processor_ip']
+        comm.ProcessorSlot = entry['processor_slot']
 
-        part_count = comm.Read(counter_entry['tag'])
+        tag = comm.Read(entry['tag'])
 
-        if part_count.Status != 'Success':
-            logger.error('Failed to read ', part_count)
+        if tag.Status != 'Success':
+            logger.error('Failed to read ', tag)
             return -1
 
-        logger.debug(f'Read pylogix counter:{part_count}, tag:{counter_entry["tag"]}')
+        logger.debug(f'Read pylogix tag:{tag}, tag:{entry["tag"]}')
 
-    return part_count.Value
+    return tag.Value
 
 
 def create_part_count_entry(counter_entry, count, config):

@@ -9,7 +9,7 @@ tags:
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
-    Machine: 1617                 # written to machine colum in db
+    Machine: 1617                 # written to machine column in db
 
   - type: pylogix                 # type = pylogix | modbus
     processor_ip: 10.4.42.135     # processor_ip is the controller's ip address
@@ -19,4 +19,4 @@ tags:
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
-    Machine: 1617                 # written to machine colum in db
+    Machine: 1617                 # written to machine column in db

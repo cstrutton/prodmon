@@ -48,12 +48,12 @@ def loop(config):
         if entry['type'] == 'pylogix':
             count = read_pylogix_tag(entry)
             if count != -1:
-                process_counter(entry, count)
+                process_counter(entry, count, config)
 
         if entry['type'] == 'modbus':
             count = read_modbus_counter(entry)
             if count != -1:
-                process_counter(entry, count)
+                process_counter(entry, count, config)
 
         if entry['type'] == 'pylogix_state':
             state = read_pylogix_tag(entry)
@@ -72,7 +72,7 @@ def process_state(state, entry):
     pass
 
 
-def process_counter(entry, count):
+def process_counter(entry, count, config):
     # adjust for Scale factor
     count = count * entry.get('Scale', 1)
 

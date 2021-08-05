@@ -55,12 +55,12 @@ def loop(config):
                 process_counter(entry, count, config)
 
         if entry['type'] == 'state':
-            state = None
+            state = 'NoValue'
             if entry['driver'] == 'pylogix':
                 state = read_pylogix_tag(entry)
             elif entry['type'] == 'modbus':
                 state = read_modbus_holding(entry)
-            if state is not None:
+            if state is not 'NoValue':
                 process_state(entry, state, config)
 
         # set the next read timestamp

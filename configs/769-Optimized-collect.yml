@@ -71,7 +71,7 @@ tags:
     driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
-    tag: Program:Production.ProdCount2.ACC    # tag is the PLC tag to read
+    tag: "IV2_Keyence.HMI_Bypass_PB.Out"    # tag is the PLC tag to read
     data_tag: '769htvision'
     frequency: 2                  # how often to try to read the tag in seconds
     always: False                 # create entry every poll if True, only on change if False

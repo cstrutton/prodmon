@@ -59,7 +59,6 @@ tags:
   - type: state                   # type = counter | state
     driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
-    processor_slot: 3             # processor_slot is the controller's slot
     tag: 'Program:MainProgram.dropoffTimeoutSeconds'    # tag is the PLC tag to read
     frequency: 5                  # how often to try to read the tag in seconds
     always: False                 # create entry every poll if True, only on change if False

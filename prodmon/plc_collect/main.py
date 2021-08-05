@@ -18,8 +18,10 @@ def set_config_defaults(config):
     config_default(config, 'Part_Number', '')
     for tag in config['tags']:
         config_default(tag, 'nextread', 0)
-        config_default(tag, 'lastvalue', 'NoValue')
+        config_default(tag, 'lastvalue', 0)
         config_default(tag, 'lastread', 0)
+        if tag['type'] == 'state':
+            tag['lastvalue'] = 'NoValue'
 
 
 def loop(config):

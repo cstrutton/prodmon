@@ -1,7 +1,8 @@
 minimum_cycle: .5
 
 tags:
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Deburr_Cell.CountPart31.acc'    # tag is the PLC tag to read
@@ -11,7 +12,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 769                  # written to machine column in db
 
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Deburr_Cell.CountPart32.acc'    # tag is the PLC tag to read
@@ -21,7 +23,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 769                  # written to machine column in db
 
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Deburr_Cell.CountPart33.acc'    # tag is the PLC tag to read
@@ -31,7 +34,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 769                  # written to machine column in db
 
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart21.acc'    # tag is the PLC tag to read
@@ -41,7 +45,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 770                  # written to machine column in db
 
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart22.acc'    # tag is the PLC tag to read
@@ -51,7 +56,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 770                  # written to machine column in db
 
-  - type: pylogix                           # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read

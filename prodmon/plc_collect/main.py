@@ -3,6 +3,7 @@ import time
 
 from pylogix import PLC
 from pyModbusTCP.client import ModbusClient
+from pyModbusTCP.utils import word_list_to_long
 
 from prodmon.shared.configuration_file import get_config, config_default
 from prodmon.shared.log_setup import get_logger
@@ -17,7 +18,7 @@ def set_config_defaults(config):
     config_default(config, 'Part_Number', '')
     for tag in config['tags']:
         config_default(tag, 'nextread', 0)
-        config_default(tag, 'lastcount', 0)
+        config_default(tag, 'lastvalue', 0)
         config_default(tag, 'lastread', 0)
 
 
@@ -44,32 +45,32 @@ def loop(config):
 
         entry['lastread'] = now
 
-        count = -1
-        if entry['type'] == 'pylogix':
-            count = read_pylogix_tag(entry)
-            if count != -1:
+        if entry['type'] == 'counter':
+            count = None
+            if entry['driver'] == 'pylogix':
+                count = read_pylogix_tag(entry)
+            elif entry['driver'] == 'modbus':
+                count = read_modbus_holding(entry)
+            if count:
                 process_counter(entry, count, config)
 
-        if entry['type'] == 'modbus':
-            count = read_modbus_counter(entry)
-            if count != -1:
-                process_counter(entry, count, config)
-
-        if entry['type'] == 'pylogix_state':
-            state = read_pylogix_tag(entry)
-            if state != -1:
-                process_state(state, entry)
+        if entry['type'] == 'state':
+            state = None
+            if entry['driver'] == 'pylogix':
+                state = read_pylogix_tag(entry)
+            elif entry['type'] == 'modbus':
+                state = read_modbus_holding(entry)
+            if state:
+                process_state(entry, state, config)
 
         # set the next read timestamp
-        entry['nextread'] += frequency
+        entry['nextread'] = frequency + entry['lastread']
 
 
-def read_pylogix_state(entry):
-    return -1
-
-
-def process_state(state, entry):
-    pass
+def process_state(entry, state, config):
+    if (state != entry['lastvalue']) or entry['always']:
+        entry['lastvalue'] = state
+        logger.info(f'Process state:{state}, tag:{entry["tag"]}')
 
 
 def process_counter(entry, count, config):
@@ -78,25 +79,30 @@ def process_counter(entry, count, config):
 
     # deal with counter == 0 edge case
     if count == 0:
-        entry['lastcount'] = count
+        entry['lastvalue'] = count
         return  # machine count rolled over or is not running
 
-    if entry['lastcount'] == 0:  # first time through...
-        entry['lastcount'] = count
+    if entry['lastvalue'] == 0:  # first time through...
+        entry['lastvalue'] = count
         logger.info('First pass through')
 
-    if count > entry['lastcount']:
-        for part_count_entry in range(entry['lastcount'] + 1, count + 1):
+    if count > entry['lastvalue']:
+        for part_count_entry in range(entry['lastvalue'] + 1, count + 1):
             create_part_count_entry(entry, part_count_entry, config)
             logger.info(f'Creating entry for part#{part_count_entry}')
-        entry['lastcount'] = count
+        entry['lastvalue'] = count
 
 
-# TODO: add error checking and logging below
-def read_modbus_counter(entry):
-    c = ModbusClient(host=entry['processor_ip'], auto_open=True, auto_close=True)
-    regs = c.read_holding_registers(entry['register'], 2)
-    return regs[0] + (regs[1] * 65536)
+def read_modbus_holding(entry):
+    c = ModbusClient(host=entry['processor_ip'], auto_open=True, auto_close=True, timeout=2)
+    regs = c.read_holding_registers(entry['register'], entry['reg_size'])
+    if regs:
+        logger.debug(f'Read modbus register:{str(regs)}, register:{entry["register"]}, {entry["reg_size"]}')
+        converted = word_list_to_long(regs, big_endian=False)
+        return converted[0]
+    else:  # regs will be None if there was an error
+        logger.error(f'Failed to read modbus register:{entry["register"]}')
+        return regs
 
 
 def read_pylogix_tag(entry):
@@ -108,7 +114,7 @@ def read_pylogix_tag(entry):
 
         if tag.Status != 'Success':
             logger.error('Failed to read ', tag)
-            return -1
+            return None
 
         logger.debug(f'Read pylogix tag:{tag}, tag:{entry["tag"]}')
 

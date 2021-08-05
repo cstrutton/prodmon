@@ -1,7 +1,8 @@
 minimum_cycle: .5
 
 tags:
-  - type: pylogix                 # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
@@ -11,7 +12,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
 
-  - type: pylogix                 # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
@@ -21,7 +23,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
 
-  - type: pylogix                 # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: pylogix               # type = pylogix | modbus
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
@@ -31,7 +34,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 728                  # written to machine column in db
 
-  - type: modbus                  # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 16                  # modbus register to read
     Part_Number: '50-1467'
@@ -40,7 +44,8 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 650L                 # written to machine column in db
 
-  - type: modbus                  # type = pylogix | modbus
+  - type: counter                 # type = counter | state
+    driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 18                  # modbus register to read
     Part_Number: '50-1467'

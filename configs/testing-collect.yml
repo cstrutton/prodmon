@@ -50,6 +50,7 @@ tags:
     processor_ip: 10.4.42.135     # processor_ip is the controller's ip address
     processor_slot: 3             # processor_slot is the controller's slot
     tag: Program:Production.ProdCount2.ACC    # tag is the PLC tag to read
+    data_tag: 'testingcounter'
     frequency: 2                  # how often to try to read the tag in seconds
     always: False                 # create entry every poll if True, only on change if False
     table: production_state       # database table to write to

@@ -69,8 +69,28 @@ def loop(config):
 
 def process_state(entry, state, config):
     if (state != entry['lastvalue']) or entry['always']:
+        create_state_entry(entry, state, config)
         entry['lastvalue'] = state
         logger.info(f'Process state:{state}, tag:{entry["tag"]}')
+
+
+def create_state_entry(entry, state, config):
+    timestamp = str(int(entry['lastread']))
+    file_path = f'{config["sqldir"]}{timestamp}.sql'
+    sql = state_entry_sql(entry, state)
+    print(sql)
+    write_sql_file(sql, file_path)
+
+
+def state_entry_sql(entry, state):
+    data_tag = entry.get('data_tag')
+    table = entry.get('table')
+    timestamp = time.time()
+
+    sql = f'INSERT INTO {table} '
+    sql += f'(timestamp, tag, value ) '
+    sql += f'VALUES ("{timestamp}" ,"{data_tag}", "{state}");\n'
+    return sql
 
 
 def process_counter(entry, count, config):

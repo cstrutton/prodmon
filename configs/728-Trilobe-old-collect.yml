@@ -61,6 +61,7 @@ tags:
     processor_ip: 192.168.100.1   # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     tag: 'Program:MainProgram.dropoffTimeoutSeconds'    # tag is the PLC tag to read
-    frequency: 5                  # how often to try to read the tag in seconds
+    data_tag: '728dropofftimeout' # state id
+    frequency: 1                  # how often to try to read the tag in seconds
     always: False                 # create entry every poll if True, only on change if False
     table: production_state       # database table to write to

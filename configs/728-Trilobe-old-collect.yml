@@ -38,6 +38,7 @@ tags:
     driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 16                  # modbus register to read
+    reg_size: 2
     Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
@@ -48,6 +49,7 @@ tags:
     driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 18                  # modbus register to read
+    reg_size: 2
     Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds

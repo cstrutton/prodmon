@@ -27,6 +27,7 @@ tags:
     driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 16                  # modbus register to read
+    reg_size: 2
     Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
@@ -37,17 +38,18 @@ tags:
     driver: modbus                # type = pylogix | modbus
     processor_ip: 10.4.42.169     # processor_ip is the controller's ip address
     register: 18                  # modbus register to read
+    reg_size: 2
     Part_Number: '50-1467'
     Scale: 1
     frequency: .5                 # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 650R                 # written to machine column in db
 
-  - type: state                 # type = counter | state
+  - type: state                   # type = counter | state
     driver: pylogix               # type = pylogix | modbus
     processor_ip: 10.4.42.135     # processor_ip is the controller's ip address
     processor_slot: 3             # processor_slot is the controller's slot
     tag: Program:Production.ProdCount2.ACC    # tag is the PLC tag to read
     frequency: 2                  # how often to try to read the tag in seconds
-    Always: False                 # create entry every poll if True, only on change if False
+    always: False                 # create entry every poll if True, only on change if False
     table: production_state       # database table to write to

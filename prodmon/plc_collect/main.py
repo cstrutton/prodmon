@@ -58,6 +58,7 @@ def loop(config):
             state = 'NoValue'
             if entry['driver'] == 'pylogix':
                 state = read_pylogix_tag(entry)
+                print(f'State: {entry["tag"]}= {state}')
             elif entry['type'] == 'modbus':
                 state = read_modbus_holding(entry)
             if state is not 'NoValue':

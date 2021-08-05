@@ -60,7 +60,7 @@ def loop(config):
                 state = read_pylogix_tag(entry)
             elif entry['type'] == 'modbus':
                 state = read_modbus_holding(entry)
-            if state:
+            if state is not None:
                 process_state(entry, state, config)
 
         # set the next read timestamp

@@ -1,4 +1,0 @@
-services:
-  collect:
-    build: prodmon/plc_collect
-

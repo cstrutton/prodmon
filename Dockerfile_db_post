@@ -11,5 +11,6 @@ RUN pip install -r requirements.txt
 
 # copy the content of the local src directory to the working directory
 COPY . .
+RUN pip install -e .
 
 CMD [ "python", "./prodmon/db_post/main.py" ]

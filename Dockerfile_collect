@@ -13,4 +13,6 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN pip install -e .
 
-CMD [ "python", "./prodmon/plc_collect/main.py" ]
+ENTRYPOINT ["python", "./prodmon/plc_collect/main.py"]
+
+CMD ["test", "test2"]

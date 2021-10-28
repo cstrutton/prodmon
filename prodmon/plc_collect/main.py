@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from pylogix import PLC
@@ -150,4 +151,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        pass
+
+    print(sys.argv)
+
+        # main()

@@ -1,4 +1,4 @@
-from python:3.8
+from python:3.8-slim
 
 # set the working directory in the container
 WORKDIR /code

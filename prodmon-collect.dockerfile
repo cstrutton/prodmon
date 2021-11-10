@@ -1,4 +1,4 @@
-from python:3.8-slim
+from python:3.8
 
 # set the working directory in the container
 WORKDIR /code
@@ -14,4 +14,4 @@ COPY . .
 RUN pip install -e .
 
 # using ENTRYPOINT means that options on the docker run command will be passed to the running command
-CMD "python ./prodmon/plc_collect/main.py ${CONFIG}"
+CMD "python3 ./prodmon/plc_collect/main.py ${CONFIG}"

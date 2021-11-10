@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  collect:
+    build:
+      context: .
+      dockerfile: prodmon-collect.dockerfile
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: sql
+        target: /code/tmpSQL
+    environment:
+      - CONFIG=1617-Gauge-collect
+
+
+  post:
+    build:
+      context: .
+      dockerfile: prodmon-post.dockerfile
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: sql
+        target: /code/tmpSQL
+    environment:
+      - CONFIG=generic-post
+
+
+volumes:
+  sql:
+

@@ -15,4 +15,4 @@ RUN pip install -e .
 
 # using ENTRYPOINT means that options on the docker run command will be passed to the running command
 ENTRYPOINT ["python", "./prodmon/plc_collect/main.py"]
-CMD ["$COLLECT_CONFIG"]
+CMD [${COLLECT_CONFIG}]

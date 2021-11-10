@@ -15,4 +15,4 @@ RUN pip install -e .
 
 # using ENTRYPOINT means that options on the docker run command will be passed to the running command
 ENTRYPOINT [ "python", "./prodmon/db_post/main.py" ]
-CMD ["$POST_CONFIG"]
+CMD [${POST_CONFIG}]

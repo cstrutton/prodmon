@@ -10,7 +10,7 @@ services:
         source: sql
         target: /code/tmpSQL
     environment:
-      - CONFIG=1617-Gauge-collect
+      - CONFIG=$COLLECT_CONFIG
 
 
   post:
@@ -23,7 +23,7 @@ services:
         source: sql
         target: /code/tmpSQL
     environment:
-      - CONFIG=generic-post
+      - CONFIG=$POST_CONFIG
 
 
 volumes:

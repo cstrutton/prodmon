@@ -11,8 +11,8 @@ run() {
 }
 
 stop() {
-  docker stop prodmon-$1
-  docker rm prodmon-$1
+  docker stop $1
+  docker rm $1
 }
 
 update() {

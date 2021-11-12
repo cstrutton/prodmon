@@ -1,4 +1,4 @@
-from python:3.8
+from python:3.8-slim
 
 # set the working directory in the container
 WORKDIR /code
@@ -14,4 +14,5 @@ COPY . .
 RUN pip install -e .
 
 # using ENTRYPOINT means that options on the docker run command will be passed to the running command
-CMD "python3 prodmon/db_post/main.py ${CONFIG}"
+ENTRYPOINT [ "python", "./prodmon/db_post/main.py" ]
+CMD ["$CONFIG"]

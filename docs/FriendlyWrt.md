@@ -16,7 +16,7 @@ config interface 'wan'
         option dns '10.4.1.200 10.5.1.200'  # correct values for PMDS
 ```
 
-#### PLC network:
+#### PLC network:docker
 edit the lan interface in `/etc/config/network` as follows:
 ```
 config interface 'lan'

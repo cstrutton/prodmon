@@ -12,7 +12,11 @@ RUN pip install -r requirements.txt
 # copy the content of the local src directory to the working directory
 COPY prodmon prodmon
 
+
+COPY setup.py setup.py
 RUN pip install -e .
+
+COPY *.env .
 
 COPY configs configs
 

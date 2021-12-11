@@ -9,9 +9,10 @@ COPY requirements.txt .
 # install dependencies
 RUN pip install -r requirements.txt
 
+COPY bin bin
+
 # copy the content of the local src directory to the working directory
 COPY prodmon prodmon
-
 
 COPY setup.py setup.py
 RUN pip install -e .

@@ -94,10 +94,25 @@ cd /opt
 git clone https://github.com/cstrutton/prodmon
 cd prodmon
 pip3 install -e .
+chmod +x prodmon/plc_collect/main.py
+chmod +x prodmon/db_post/main.py
 ```
 
 ## Setup config file
 ```bash
 mkdir /etc/prodmon
 cp configs/<config file> /etc/prodmon/[ collect|post ].confg
+```
+
+## Setup init.d service files
+```bash
+cp service_files/initd/collect /etc/init.d/collect
+chmod +x /etc/init.d/collect
+/etc/init.d/collect enable
+/etc/init.d/collect start
+
+cp service_files/initd/post /etc/init.d/post
+chmod +x /etc/init.d/post
+/etc/init.d/post enable
+/etc/init.d/post start
 ```

@@ -84,5 +84,20 @@ wget https://downloads.openwrt.org/releases/19.07.5/packages/aarch64_cortex-a
 
 #  Setup without docker
 
-## Install Dependancies
+## Install Dependencies and Prodmon System
+```bash
+opkg update
+opkg install python3-base python3-pip
+python3 -m pip install --upgrade pip
+pip3 install wheel
+cd /opt
+git clone https://github.com/cstrutton/prodmon
+cd prodmon
+pip3 install -e .
+```
 
+## Setup config file
+```bash
+mkdir /etc/prodmon
+cp configs/<config file> /etc/prodmon/[ collect|post ].confg
+```

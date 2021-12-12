@@ -6,7 +6,7 @@ tags:
     processor_slot: 0
     tag: Program:MainProgram.ProdCount.acc  # tag is the PLC tag to read
     Part_Number: '50-9341'
-    Scale: 2
+    Scale: 1
     frequency: 1                  # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1532                 # written to machine column in db
@@ -16,7 +16,7 @@ tags:
     processor_slot: 0
     tag: Program:MainProgram.ProdCountReject.acc  # tag is the PLC tag to read
     Part_Number: '50-9341'
-    Scale: 2
+    Scale: 1
     frequency: 1                  # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
     Machine: 1532REJ              # written to machine column in db

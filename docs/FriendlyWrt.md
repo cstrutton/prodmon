@@ -99,7 +99,8 @@ pip3 install -e .
 ## Setup config file
 ```bash
 mkdir /etc/prodmon
-cp configs/<config file> /etc/prodmon/[ collect|post ].config
+cp configs/generic-post.yml /etc/prodmon/post.config
+cp configs/<collect config file> /etc/prodmon/collect.config
 ```
 
 ## Setup init.d service files

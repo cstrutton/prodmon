@@ -35,7 +35,19 @@ git pull # get the latest copy from the repo
 docker build -t prodmon-collect --file prodmon-collect.dockerfile .
 docker build -t prodmon-post --file prodmon-post.dockerfile .
 
-docker run -d --restart=unless-stopped --volume sql:/code/tempSQL --name collect prodmon-collect <configfile> 
+docker run -d --restart=unless-stopped \
+--volume sql:/code/tempSQL \
+--volume $(pwd)/configs:/code/configs \
+--name post \
+prodmon-post generic-post 
+
+docker run -d --restart=unless-stopped \
+--volume sql:/code/tempSQL \
+--volume $(pwd)/configs:/code/configs \
+--name collect \
+prodmon-collect <configfile> 
+
+
 docker run -d --restart=unless-stopped --volume sql:/code/tempSQL --name post prodmon-post <configfile> 
 ```
 # ****** From here down needs to be tested ******
@@ -62,3 +74,15 @@ Advanced Settings:
     External IP address: <to the WAN1 alias in network config>
 ```
 ** The internal device needs to set its network gateway to point to the gateway device.
+
+
+install nano 
+```
+wget https://downloads.openwrt.org/releases/19.07.5/packages/aarch64_cortex-a
+53/packages/nano_5.9-1_aarch64_cortex-a53.ipk```
+```
+
+#  Setup without docker
+
+## Install Dependancies
+

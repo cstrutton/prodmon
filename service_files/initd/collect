@@ -31,7 +31,7 @@ case "$1" in
    start
    ;;
   *)
-    echo "Usage: /etc/init.d/weather {start|stop|restart}"
+    echo "Usage: /etc/init.d/collect {start|stop|restart}"
     exit 1
 esac
 exit 0

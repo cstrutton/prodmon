@@ -1,19 +1,13 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2008 OpenWrt.org
-START=99
-start() {
-        sleep 5   # make sure boot process is done, no more console msgs
-        . /etc/profile
-        cd /opt/prodmon/
-        python3 prodmon/plc_collect/main.py &
-        echo "Collect Started"
-}
 
-stop()  {
-   pid=`ps -ef | grep '[p]ython3 prodmon/plc_collect/main.py' | awk '{ print $1 }'`
-    echo $pid
-    kill $pid
-    sleep 2
-    echo "Collect Stopped"
+START=99
+
+start() {
+        ubus -t 60 wait_for network.interface network.interface.loopback
+        sleep 5   # make sure boot process is done, no more console msgs
+        echo "Collect Started"
+        cd /opt/prodmon/
+        /usr/bin/python3 prodmon/plc_collect/main.py &
 }
 

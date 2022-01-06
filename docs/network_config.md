@@ -1,5 +1,29 @@
-### Networking Configuration How To
-For Seeed NPI I.MX6ULL
+## Networking Configuration How To
+### For Nano Pi R2S
+
+`/etc/network/interfaces.d/eth0`
+```
+auto eth0
+iface eth0 inet static
+  address 10.4.42.176
+  netmask 255.255.192.0
+  gateway 10.4.1.9
+```
+ 
+`/etc/network/interfaces.d/eth1`
+```
+auto eth1
+iface eth1 inet static
+  address 192.168.1.254
+  netmask 255.255.255.0
+```
+ 
+`/etc/systemd/resolved.conf`
+```
+DNS=10.4.1.200 10.5.1.200
+```
+
+## For Seeed NPI I.MX6ULL
 - label center plug PLC and outer plug PLANT
 
 #####Setup

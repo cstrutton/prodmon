@@ -1,6 +1,8 @@
 ## Networking Configuration How To
 ### For Nano Pi R2S
 
+Wiki: https://wiki.friendlyarm.com/wiki/index.php/NanoPi_R2S
+
 `/etc/network/interfaces.d/eth0`
 ```
 auto eth0

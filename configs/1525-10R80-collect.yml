@@ -21,3 +21,37 @@ tags:
     table: GFxPRoduction          # database table to write to
     Machine: 1525REJ              # written to machine column in db
 
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 0                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1523                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 2                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1521                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 4                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1518                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 6                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to

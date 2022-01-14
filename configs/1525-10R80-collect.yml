@@ -55,3 +55,4 @@ tags:
     Scale: 1
     frequency: 1                  # how often to try to read the tag in seconds
     table: GFxPRoduction          # database table to write to
+    Machine: 1522                 # written to machine column in db

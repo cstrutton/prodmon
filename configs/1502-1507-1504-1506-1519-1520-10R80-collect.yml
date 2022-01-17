@@ -1,0 +1,58 @@
+minimum_cycle: .5
+
+tags:
+  - type: pylogix                               # type = pylogix | modbus
+    processor_ip: 192.168.1.70                # processor_ip is the controller's ip address
+    processor_slot: 0
+    tag: ProdCount1502.acc   # tag is the PLC tag to read
+    Part_Number: '50-9341'
+    Scale: 2
+    frequency: .5                 # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1502                 # written to machine column in db
+
+  - type: pylogix                               # type = pylogix | modbus
+    processor_ip: 192.168.1.70                # processor_ip is the controlle$
+    processor_slot: 0
+    tag: ProdCount1507.acc   # tag is the PLC tag to read
+    Part_Number: '50-9341'
+    Scale: 2
+    frequency: .5                 # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1507                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 0                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1519                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 2                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1520                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 4                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1506                 # written to machine column in db
+
+  - type: modbus                  # type = pylogix | modbus
+    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    register: 6                   # modbus register to read
+    Part_Number: '50-9341'
+    Scale: 1
+    frequency: 1                  # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1504                 # written to machine column in db

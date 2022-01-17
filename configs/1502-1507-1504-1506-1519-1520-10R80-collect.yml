@@ -22,7 +22,7 @@ tags:
     Machine: 1507                 # written to machine column in db
 
   - type: modbus                  # type = pylogix | modbus
-    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    processor_ip: 10.4.42.183     # processor_ip is the controller's ip address
     register: 0                   # modbus register to read
     Part_Number: '50-9341'
     Scale: 1
@@ -31,7 +31,7 @@ tags:
     Machine: 1519                 # written to machine column in db
 
   - type: modbus                  # type = pylogix | modbus
-    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    processor_ip: 10.4.42.183     # processor_ip is the controller's ip address
     register: 2                   # modbus register to read
     Part_Number: '50-9341'
     Scale: 1
@@ -40,7 +40,7 @@ tags:
     Machine: 1520                 # written to machine column in db
 
   - type: modbus                  # type = pylogix | modbus
-    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    processor_ip: 10.4.42.183     # processor_ip is the controller's ip address
     register: 4                   # modbus register to read
     Part_Number: '50-9341'
     Scale: 1
@@ -49,7 +49,7 @@ tags:
     Machine: 1506                 # written to machine column in db
 
   - type: modbus                  # type = pylogix | modbus
-    processor_ip: 10.4.42.184     # processor_ip is the controller's ip address
+    processor_ip: 10.4.42.183     # processor_ip is the controller's ip address
     register: 6                   # modbus register to read
     Part_Number: '50-9341'
     Scale: 1

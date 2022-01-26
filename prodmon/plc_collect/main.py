@@ -59,6 +59,8 @@ def loop(config):
         # adjust for Scale factor
         count = count * entry.get('Scale', 1)
 
+        machine = entry['Machine']
+
         # deal with counter == 0 edge case
         if count == 0:
             entry['lastcount'] = count
@@ -66,12 +68,11 @@ def loop(config):
 
         if entry['lastcount'] == 0:  # first time through...
             entry['lastcount'] = count
-            logger.info('First pass through')
+            logger.info('First pass through on machine {machine}')
 
         if count > entry['lastcount']:
             for part_count_entry in range(entry['lastcount'] + 1, count + 1):
                 create_part_count_entry(entry, part_count_entry, config)
-                machine = entry['Machine']
                 logger.info(f'Creating entry for: {machine} - {part_count_entry} ')
             entry['lastcount'] = count
 

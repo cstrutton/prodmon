@@ -1,3 +1,4 @@
+bin/*.txt
 .idea/
 templogs/*.log
 tempSQL*/*.sql

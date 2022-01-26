@@ -1,0 +1,66 @@
+---
+- name: Update NanoPi as a Prodmon device
+  hosts: nanopi
+  become: true
+  tasks:
+    - name: Git clone Prodmon
+      ansible.builtin.git:
+        repo: https://github.com/cstrutton/prodmon.git
+        dest: /opt/prodmon
+
+    - name: Install Prodmon and dependancies
+      ansible.builtin.pip:
+        chdir: /opt/prodmon
+        name: .
+
+    - name: Copy collect config to /etc/prodmon/
+      ansible.builtin.file:
+        src: '/opt/prodmon/{{ item.src }}'
+        dest: '{{ item.dest }}'
+        state: hard
+      loop:
+        - { src: configs/{{ collect_config }}.yml, dest: /etc/prodmon/collect.config }
+        - { src: configs/{{ post_config }}.yml, dest: /etc/prodmon/post.config }
+        - { src: service_files/post.service, dest: /etc/systemd/system/ }
+        - { src: service_files/collect.service, dest: /etc/systemd/system/ }
+
+
+#    - name: Copy collect config to /etc/prodmon/
+#      copy:
+#        src: /opt/prodmon/configs/{{ collect_config }}.yml
+#        remote_src: yes
+#        dest: /etc/prodmon/collect.config
+#        owner: root
+#        group: root
+#
+#    - name: Copy post config to /etc/prodmon/
+#      copy:
+#        src: /opt/prodmon/configs/{{ post_config }}.yml
+#        remote_src: yes
+#        dest: /etc/prodmon/post.config
+#        owner: root
+#        group: root
+#
+#    - name: Copy Prodmon collect service file to server
+#      copy:
+#        src: /opt/prodmon/service_files/collect.service
+#        remote_src: yes
+#        dest: /etc/systemd/system
+#        owner: root
+#        group: root
+#
+#    - name: Copy Prodmon post service file to server
+#      copy:
+#        src: /opt/prodmon/service_files/post.service
+#        remote_src: yes
+#        dest: /etc/systemd/system
+#        owner: root
+#        group: root
+
+#    - name: Start Prodmon collect service
+#      systemd:
+#        name:
+#          - collect
+#          - post
+#        state: restarted
+#        enabled: yes

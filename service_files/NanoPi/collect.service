@@ -1,0 +1,13 @@
+[Unit]
+# Human readable name of the unit
+Description=prodmon: PLC counter monitoring
+
+[Service]
+# Command to execute when the service is started
+WorkingDirectory= /opt/prodmon/
+ExecStart=python3 /opt/prodmon/prodmon/plc_collect/main.py
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=default.target

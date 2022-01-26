@@ -1,0 +1,22 @@
+minimum_cycle: .5
+
+tags:
+  - type: pylogix                 # type = pylogix | modbus
+    processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
+    processor_slot: 3             # processor_slot is the controller's slot
+    tag: Program:Production.ProdCount1.ACC    # tag is the PLC tag to read
+    Part_Number: '50-5081'
+    Scale: 1
+    frequency: .5                 # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1617                 # written to machine colum in db
+
+  - type: pylogix                 # type = pylogix | modbus
+    processor_ip: 192.168.1.1     # processor_ip is the controller's ip address
+    processor_slot: 3             # processor_slot is the controller's slot
+    tag: Program:Production.ProdCount2.ACC    # tag is the PLC tag to read
+    Part_Number: '50-4865'
+    Scale: 1
+    frequency: .5                 # how often to try to read the tag in seconds
+    table: GFxPRoduction          # database table to write to
+    Machine: 1617                 # written to machine colum in db

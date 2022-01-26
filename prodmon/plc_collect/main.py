@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import os
+import sys
 import time
 
 from pylogix import PLC
@@ -86,10 +89,11 @@ def read_pylogix_counter(counter_entry):
         comm.IPAddress = counter_entry['processor_ip']
         comm.ProcessorSlot = counter_entry['processor_slot']
 
-        part_count = comm.Read(counter_entry['tag'])
+        tag = counter_entry['tag']
+        part_count = comm.Read(tag)
 
         if part_count.Status != 'Success':
-            logger.error('Failed to read ', part_count)
+            logger.error(f'Failed to read: {part_count} : {tag}')
             return -1
 
         logger.debug(f'Read pylogix counter:{part_count}, tag:{counter_entry["tag"]}')

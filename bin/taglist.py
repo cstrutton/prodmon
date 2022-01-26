@@ -25,3 +25,5 @@ def get_tag_list(ip, slot=0):
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         get_tag_list(sys.argv[1])
+    else:
+        get_tag_list("10.4.42.135", 3)

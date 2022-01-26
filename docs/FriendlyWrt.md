@@ -110,6 +110,4 @@ cp service_files/initd/collect /etc/init.d/collect
 
 cp service_files/initd/post /etc/init.d/post
 /etc/init.d/post enable
-
-reboot
 ```

@@ -1,0 +1,31 @@
+---
+ - name: Playbook configure NanoPi as a Prodmon device
+   hosts: nanopi
+   become: true
+   tasks:
+    - name: Ansible apt install dependancies
+      ansible.builtin.apt:
+        name:
+          - nano
+          - python3
+          - python3-pip
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Git clone Prodmon
+      ansible.builtin.git:
+        repo: https://github.com/cstrutton/prodmon.git
+        dest: /opt/prodmon
+
+    - name: Install Prodmon and dependancies
+      ansible.builtin.pip:
+        chdir: /opt/prodmon
+        name: .
+
+    - name: Create config directory
+      ansible.builtin.file:
+        path: /etc/prodmon
+        state: directory
+        owner: root
+        group: root

@@ -68,7 +68,7 @@ def loop(config):
 
         if entry['lastcount'] == 0:  # first time through...
             entry['lastcount'] = count
-            logger.info('First pass through on machine {machine}')
+            logger.info(f'First pass through on machine {machine}')
 
         if count > entry['lastcount']:
             for part_count_entry in range(entry['lastcount'] + 1, count + 1):

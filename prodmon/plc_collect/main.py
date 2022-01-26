@@ -71,7 +71,8 @@ def loop(config):
         if count > entry['lastcount']:
             for part_count_entry in range(entry['lastcount'] + 1, count + 1):
                 create_part_count_entry(entry, part_count_entry, config)
-                logger.info(f'Creating entry for part#{part_count_entry}')
+                machine = entry['Machine']
+                logger.info(f'Creating entry for: {machine} - {part_count_entry} ')
             entry['lastcount'] = count
 
         # set the next read timestamp

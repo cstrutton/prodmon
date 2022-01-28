@@ -13,24 +13,41 @@ from prodmon.shared.log_setup import get_logger
 logger = get_logger()
 
 
-def set_config_defaults(config):
-    # Set default values for config keys
-    config_default(config, 'sqldir', "./tempSQL/")
-    config_default(config, 'minimum_cycle', .5)
-    config_default(config, 'Part_Number', '')
-    for tag in config['tags']:
-        config_default(tag, 'nextread', 0)
-        config_default(tag, 'lastcount', 0)
-        config_default(tag, 'lastread', 0)
+class Tag:
+    name = ''
+    last_value = None
+
+    def __init__(self, name):
+        self.name = name
+
+
+class Device:
+    name = ''
+    ip = ''
+    processor_slot = 0
+    tag_list = []
+    tag_names = []
+
+    def __init__(self, driver, name, ip, slot=0):
+        self.driver = driver
+        self.name = name
+        self.ip = ip
+        self.processor_slot = slot
+
+    def add_tag(self, tag):
+        self.tag_list.append(tag)
+        self.tag_names.append(tag.name)
+
+    def read_tags(self):
+        pass
 
 
 def loop(config):
-    minimum_cycle = config['minimum_cycle']
-
-    for entry in config['tags']:
-
+    for device in config['devices']:
         # get current timestamp
         now = time.time()
+
+    for entry in config['tags']:
 
         frequency = entry['frequency']
 
@@ -140,14 +157,9 @@ def write_sql_file(sql, path):
 
 @logger.catch()
 def main():
-
-    # if os.environ.get("DEBUG", default=False):
-    #     logger.add('templogs/prodmon-collect.log')
-    # else:
-    #     logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
-    #
-
     collect_config = get_config('collect')
+
+
 
     set_config_defaults(collect_config)
 

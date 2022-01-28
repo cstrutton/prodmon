@@ -62,7 +62,7 @@ devices:
     name: '650 Trilobe Slurry'
     ip: 10.4.42.169         # processor_ip is the controller's ip address
     frequency: .5                     # how often to try to read the tag in seconds
-    - tags:
+    tags:
       - register: 16                  # modbus register to read
         Part_Number: '50-1467'
         Scale: 1

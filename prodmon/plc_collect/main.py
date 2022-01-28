@@ -16,30 +16,49 @@ logger = get_logger()
 class Tag:
     name = ''
     last_value = None
+    last_read = None
+    next_read = None
+
+    def __init__(self, name, data_type, scale, machine, db_table):
+        self.name = name
+        self.data_type = data_type
+        self.scale = scale
+        self.machine = machine
+        self.db_table = db_table
+
+
+class Device:
 
     def __init__(self, name):
         self.name = name
 
-
-class Device:
-    name = ''
-    ip = ''
-    processor_slot = 0
-    tag_list = []
-    tag_names = []
-
-    def __init__(self, driver, name, ip, slot=0):
-        self.driver = driver
-        self.name = name
-        self.ip = ip
-        self.processor_slot = slot
-
-    def add_tag(self, tag):
+    def add_data_point(self, tag):
         self.tag_list.append(tag)
         self.tag_names.append(tag.name)
 
     def read_tags(self):
         pass
+
+    def is_valid(self):
+        pass
+
+
+class Pylogix_Device(Device):
+
+    def __init__(self, name, ip, slot=0):
+        self.driver = "pylogix"
+        = name
+        self.ip = ip
+        self.processor_slot = slot
+
+    def is_valid(self):
+
+        if not self.driver:
+            return False
+        if not self.ip:
+            return False
+
+
 
 
 def loop(config):
@@ -157,14 +176,27 @@ def write_sql_file(sql, path):
 
 @logger.catch()
 def main():
-    collect_config = get_config('collect')
+    devices = []
+
+    # reads the yaml config file and returns it as a data structure
+    config = get_config('collect')
+
+    for device in config['devices']:
+
+        driver = device.get('driver', None)
+        name = device.get('name', None)
+        ip = device.get('ip', None)
+        slot = device.get('slot', 0)
+
+        device_entry = Device(driver=driver, name=name, ip=ip, slot=slot)
+
+        for tag in device['tags']:
 
 
+            pass
 
-    set_config_defaults(collect_config)
-
-    while True:
-        loop(collect_config)
+    # while True:
+    #     loop(collect_config)
 
 
 if __name__ == "__main__":

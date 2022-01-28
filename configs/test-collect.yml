@@ -1,77 +1,95 @@
 devices:
-  - type: pylogix                     # type = pylogix | modbus
+  - driver: pylogix                   # type = pylogix | modbus
     name: '728 Tacco'
     ip: 192.168.100.1                 # processor_ip is the controller's ip address
     processor_slot: 0                 # processor_slot is the controller's slot
     frequency: .5                     # how often to try to read the tags in seconds
     tags:
-      - tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 728                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 728O                 # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 728R                 # written to machine column in db
+      - type: 'counter'
+        tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 728                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-  - type: pylogix                     # type = pylogix | modbus
+      - type: 'counter'
+        tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 728O                 # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: 'counter'
+        tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 728R                 # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+  - driver: pylogix                   # type = pylogix | modbus
     name: '921M Main Line'
-    ip: 192.168.100.46      # processor_ip is the controller's ip address
+    ip: 192.168.100.46                # processor_ip is the controller's ip address
     processor_slot: 12                # processor_slot is the controller's slot
     frequency: .5                     # how often to try to read the tag in seconds
     tags:
-      - tag: 'Program:OKUMA_1.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 647                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:OKUMA_2.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 648                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:OKUMA_3.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 649                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:OKUMA_4.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 646                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:OKUMA_5.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 645                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
-      - tag: 'Program:OKUMA_.ProdCount.ACC'    # tag is the PLC tag to read
-        Scale: 1
-        Part_Number: '50-1467'
-        Machine: 644                  # written to machine column in db
+      - type: 'counter'
+        tag: 'Program:OKUMA_1.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 647                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-  - type: modbus                      # type = pylogix | modbus
+      - type: 'counter'
+        tag: 'Program:OKUMA_2.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 648                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: 'counter'
+        tag: 'Program:OKUMA_3.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 649                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: 'counter'
+        tag: 'Program:OKUMA_4.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 646                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: 'counter'
+        tag: 'Program:OKUMA_5.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 645                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: 'counter'
+        tag: 'Program:OKUMA_.ProdCount.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-1467'
+        machine: 644                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+  - driver: modbus                    # type = pylogix | modbus
     name: '650 Trilobe Slurry'
-    ip: 10.4.42.169         # processor_ip is the controller's ip address
+    ip: 10.4.42.169                   # processor_ip is the controller's ip address
     frequency: .5                     # how often to try to read the tag in seconds
     tags:
+      - type: 'ADAM_counter'
       - register: 16                  # modbus register to read
-        Part_Number: '50-1467'
-        Scale: 1
+        part_number: '50-1467'
+        scale: 1
         table: GFxPRoduction          # database table to write to
-        Machine: 650L                 # written to machine column in db
+        machine: 650L                 # written to machine column in db
 
+      - type: 'ADAM_counter'
       - register: 18                  # modbus register to read
-        Part_Number: '50-1467'
-        Scale: 1
+        part_number: '50-1467'
+        scale: 1
         table: GFxPRoduction          # database table to write to
-        Machine: 650R                 # written to machine column in db
+        machine: 650R                 # written to machine column in db
 

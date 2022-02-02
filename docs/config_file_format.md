@@ -18,15 +18,17 @@ Each tag:
       # pylogix counter tag
       - type: 'counter' 
         tag: 'tagname'          # the full path to the tag in the PLC
-        scale: x                # how many parts per cycle
+        scale: 1                # how many parts per cycle
         part_number: '50-9341'  # recorded in the part_number column in the db
         machine: '728'          # recorded in the machine column in the db
         table: 'GFxPRoduction'  # database table to write to
       # pylogix data tag (pending)
       - type: 'data'
         tag: 'tagname'
+        scale: 1                # scale from machine to engineering units
         name: 'droptimer'       # recorded in the name column in the db
-        stratagy: 'on_change'   # when to record to db: always|on_change
+        table: 'datatable'      # db table to write value to
+        strategy: 'on_change'   # when to record to db: always|on_change
       # modbus register
       - type: 'ADAM_counter'    # reads ADAM 6xxx counter register
         register: 16            # register to start reading from

@@ -14,51 +14,118 @@ logger = get_logger()
 
 
 class Tag:
-    name = ''
     last_value = None
     last_read = None
     next_read = None
 
-    def __init__(self, name, data_type, scale, machine, db_table):
-        self.name = name
-        self.data_type = data_type
+    def __init__(self, tag_name, scale, db_table):
+        self.tag_name = tag_name
         self.scale = scale
-        self.machine = machine
-        self.db_table = db_table
+        self.dbtable = db_table
+
+
+class PylogixCounterTag(Tag):
+
+    def __init__(self, tag_name, scale, db_table, machine, part_number):
+        super().__init__(tag_name, scale, db_table)
+        self.db_machine_data = machine
+        self.db_part_number_data = part_number
+
+
+class PylogixDataTag(Tag):
+
+    def __init__(self, tag_name, scale, db_table, name, strategy):
+        super().__init__(tag_name, scale, db_table)
+        self.db_name_data = name
+        self.strategy = strategy
+
+
+class ModbusADAM6xxxCounterTag(Tag):
+    def __init__(self, tag_name, scale, db_table):
+        super().__init__(tag_name, scale, db_table)
 
 
 class Device:
+    tag_list = []
 
-    def __init__(self, name):
+    def __init__(self, name, ip, frequency):
         self.name = name
+        self.ip = ip
+        self.frequency = frequency
+
+    def add_data_points(self, tag_list):
+        for tag in tag_list:
+            self.add_data_point(tag)
 
     def add_data_point(self, tag):
-        self.tag_list.append(tag)
-        self.tag_names.append(tag.name)
+        tag.type = tag.get('type', None)
+        self.tag_list.append(self.add_data_point(tag))
 
     def read_tags(self):
         pass
 
     def is_valid(self):
-        pass
-
-
-class Pylogix_Device(Device):
-
-    def __init__(self, name, ip, slot=0):
-        self.driver = "pylogix"
-        = name
-        self.ip = ip
-        self.processor_slot = slot
-
-    def is_valid(self):
-
         if not self.driver:
             return False
         if not self.ip:
             return False
 
 
+class PylogixDevice(Device):
+    tag_names = []
+
+    def __init__(self, name, ip, frequency, slot):
+        super().__init__(name, ip, frequency)
+        self.driver = "pylogix"
+        self.processor_slot = slot
+
+    def add_data_point(self, tag):
+        tag_type = tag.get('type', None)
+        tag_name = tag.get('tag', None)
+        scale = tag.get('scale', 1)
+        db_table = tag.get('table', None)
+
+        if tag_type == 'counter':
+            machine = tag.get('machine', None)
+            part_number = tag.get('part_number', None)
+            tag_object = PylogixCounterTag(tag_name, scale, db_table, machine, part_number)
+        elif tag_type == 'data':
+            name = tag.get('name', None)
+            strategy = tag.get('strategy', None)
+            tag_object = PylogixDataTag(tag_name, scale, db_table, name, strategy)
+
+        self.tag_names.append(tag_object.tag_name)
+
+    def is_valid(self):
+        if not super().is_valid():
+            return False
+
+
+class ModbusDevice(Device):
+
+    def __init__(self, name, ip, frequency):
+        super().__init__(name, ip, frequency)
+        self.driver = "modbus"
+
+    def add_data_point(self, tag):
+        tag_type = tag.get('type', None)
+        register = tag.get('register', None)
+        scale = tag.get('scale', 1)
+        db_table = tag.get('table', None)
+
+        if tag_type == 'ADAM_counter':
+            machine = tag.get('machine', None)
+            part_number = tag.get('part_number', None)
+            tag_object = ModbusADAM6xxxCounterTag(register, scale, db_table, machine, part_number)
+        elif tag_type == 'data':
+            name = tag.get('name', None)
+            strategy = tag.get('strategy', None)
+            tag_object = PylogixDataTag(tag_name, scale, db_table, name, strategy)
+
+
+    def is_valid(self):
+        if not super().is_valid():
+            return False
 
 
 def loop(config):
@@ -183,14 +250,21 @@ def main():
 
     for device in config['devices']:
 
-        driver = device.get('driver', None)
         name = device.get('name', None)
         ip = device.get('ip', None)
-        slot = device.get('slot', 0)
+        frequency = device.get('frequency', 1)
 
-        device_entry = Device(driver=driver, name=name, ip=ip, slot=slot)
+        driver = device.get('driver', None)
+        if driver == 'pylogix':
+            slot = device.get('processor_slot', 0)
+            device_entry = PylogixDevice(name, ip, frequency, slot)
+        elif driver == 'modbus':
+            device_entry = ModbusDevice(driver, name, ip, frequency)
 
         for tag in device['tags']:
+            device_entry.add_data_point(tag)
+
+
 
 
             pass

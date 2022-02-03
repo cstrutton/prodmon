@@ -68,7 +68,7 @@ devices:
         table: GFxPRoduction          # database table to write to
 
       - type: 'counter'
-        tag: 'Program:OKUMA_.ProdCount.ACC'    # tag is the PLC tag to read
+        tag: 'Program:OKUMA_6.ProdCount.ACC'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-1467'
         machine: 644                  # written to machine column in db
@@ -80,14 +80,14 @@ devices:
     frequency: .5                     # how often to try to read the tag in seconds
     tags:
       - type: 'ADAM_counter'
-      - register: 16                  # modbus register to read
+        register: 16                  # modbus register to read
         part_number: '50-1467'
         scale: 1
         table: GFxPRoduction          # database table to write to
         machine: 650L                 # written to machine column in db
 
       - type: 'ADAM_counter'
-      - register: 18                  # modbus register to read
+        register: 18                  # modbus register to read
         part_number: '50-1467'
         scale: 1
         table: GFxPRoduction          # database table to write to

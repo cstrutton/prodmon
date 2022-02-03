@@ -7,7 +7,7 @@ import time
 from pylogix import PLC
 from pyModbusTCP.client import ModbusClient
 
-from prodmon.shared.configuration_file import get_config, config_default
+from prodmon.shared.configuration_file import read_config_file, config_default
 from prodmon.shared.log_setup import get_logger
 
 logger = get_logger()
@@ -128,11 +128,11 @@ class ModbusDevice(Device):
             return False
 
 
-def get_config():
+def process_config():
     devices = []
 
     # reads the yaml config file and returns it as a data structure
-    config = get_config('collect')
+    config = read_config_file('collect')
 
     for device in config['devices']:
 
@@ -153,10 +153,6 @@ def get_config():
         devices.append(device_entry)
 
     return devices
-
-
-
-
 
 def loop(config):
     for device in config['devices']:
@@ -273,7 +269,7 @@ def write_sql_file(sql, path):
 
 @logger.catch()
 def main():
-    devices = get_config()
+    devices = read_config_file()
     while True:
         for device in devices:
             device.process_tags()

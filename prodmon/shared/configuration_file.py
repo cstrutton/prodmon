@@ -10,7 +10,7 @@ def config_default(config_dict, key, default):
         config_dict[key] = default
 
 
-def get_config(config_key=None):
+def read_config_file(config_key=None):
     if len(sys.argv) == 2:
         config_path = f'configs/{sys.argv[1]}.yml'
     else:

@@ -1,16 +1,16 @@
 devices:
-  - driver: pylogix                   # type = pylogix | modbus
-    name: '728 Tacco'
-    ip: 192.168.100.1                 # processor_ip is the controller's ip address
-    processor_slot: 0                 # processor_slot is the controller's slot
-    frequency: .5                     # how often to try to read the tags in seconds
-    tags:
-      - type: 'counter'
-        tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 728                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+#  - driver: pylogix                   # type = pylogix | modbus
+#    name: '728 Tacco'
+#    ip: 192.168.100.1                 # processor_ip is the controller's ip address
+#    processor_slot: 0                 # processor_slot is the controller's slot
+#    frequency: .5                     # how often to try to read the tags in seconds
+#    tags:
+#      - type: 'counter'
+#        tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
+#        scale: 1
+#        part_number: '50-1467'
+#        machine: 728                  # written to machine column in db
+#        table: GFxPRoduction          # database table to write to
 
 #      - type: 'counter'
 #        tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
@@ -77,7 +77,7 @@ devices:
   - driver: modbus                    # type = pylogix | modbus
     name: '650 Trilobe Slurry'
     ip: 10.4.42.169                   # processor_ip is the controller's ip address
-    frequency: .5                     # how often to try to read the tag in seconds
+    frequency: 3                     # how often to try to read the tag in seconds
     tags:
       - type: 'ADAM_counter'
         register: 16                  # modbus register to read
@@ -85,11 +85,11 @@ devices:
         scale: 1
         table: GFxPRoduction          # database table to write to
         machine: 650L                 # written to machine column in db
-#
-#      - type: 'ADAM_counter'
-#        register: 18                  # modbus register to read
-#        part_number: '50-1467'
-#        scale: 1
-#        table: GFxPRoduction          # database table to write to
-#        machine: 650R                 # written to machine column in db
-#
+
+      - type: 'ADAM_counter'
+        register: 18                  # modbus register to read
+        part_number: '50-1467'
+        scale: 1
+        table: GFxPRoduction          # database table to write to
+        machine: 650R                 # written to machine column in db
+

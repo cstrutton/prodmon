@@ -1,158 +1,258 @@
 #!/usr/bin/env python3
-
-import os
 import sys
 import time
 
-from pylogix import PLC
 from pyModbusTCP.client import ModbusClient
+from pylogix import PLC
 
-from prodmon.shared.configuration_file import get_config, config_default
+from prodmon.shared.configuration_file import read_config_file
 from prodmon.shared.log_setup import get_logger
+
+test_count = 25
+
+SQL_DIRECTORY = 'tempSQL/'
 
 logger = get_logger()
 
 
-def set_config_defaults(config):
-    # Set default values for config keys
-    config_default(config, 'sqldir', "./tempSQL/")
-    config_default(config, 'minimum_cycle', .5)
-    config_default(config, 'Part_Number', '')
-    for tag in config['tags']:
-        config_default(tag, 'nextread', 0)
-        config_default(tag, 'lastcount', 0)
-        config_default(tag, 'lastread', 0)
+class Tag:
+
+    def __init__(self, parent, address, scale, frequency, db_table):
+        self.parent = parent
+        self.address = address
+        self.type = None
+        self.scale = scale
+        self.frequency = frequency
+        self.dbtable = db_table
+        self.next_read = time.time()
+        self.last_value = None
+
+    def poll(self):
+        pass
+
+    def write_sql_file(self, count, timestamp):
+        pass
 
 
-def loop(config):
-    minimum_cycle = config['minimum_cycle']
+class CounterTag(Tag):
 
-    for entry in config['tags']:
+    def __init__(self, parent, address, scale, frequency, db_table, machine, part_number):
+        super().__init__(parent, address, scale, frequency, db_table)
+        self.type = 'counter'
+        self.db_machine_data = machine
+        self.db_part_number_data = part_number
 
-        # get current timestamp
-        now = time.time()
+    def poll(self):
+        timestamp = time.time()
+        if self.next_read < timestamp:
+            # increment now so it doesn't get missed
+            self.next_read = timestamp + self.frequency
 
-        frequency = entry['frequency']
+            count, error_flag = self.parent.read(self)
+            if error_flag:
+                return
+            count *= self.scale
 
-        # make sure we are not polling too fast
-        if frequency < minimum_cycle:
-            frequency = minimum_cycle
+            # last_value is 0 or Null
+            if not self.last_value:
+                if self.last_value == 0:
+                    logger.info(f'Counter Rolled over: Successfully read {self.parent.name}:{self.address} ({count})')
+                else:
+                    logger.info(f'First pass through: Successfully read {self.parent.name}:{self.address} ({count})')
+                self.last_value = count
+                return
 
-        # handle first pass through
-        if entry['nextread'] == 0:
-            entry['nextread'] = now
+            # no change
+            if not count > self.last_value:
+                return
 
-        if entry['nextread'] > now:
-            continue  # too soon move on
+            # create entry for new values
+            for part_count_entry in range(self.last_value + 1, count + 1):
+                logger.info(f'Creating entry for: {self.parent.name}:{self.address} ({count})')
+                sys.stdout.flush()
+                file_path = f'{SQL_DIRECTORY}{timestamp}.sql'
+                sql = self.entry_sql(part_count_entry, timestamp)
+                with open(file_path, "a+") as file:
+                    file.write(sql)
 
-        entry['lastread'] = now
+            self.last_value = count
 
-        # get counter reading
-        count = -1
-        if entry['type'] == 'pylogix':
-            count = read_pylogix_counter(entry)
-        if entry['type'] == 'modbus':
-            count = read_modbus_counter(entry)
-        if count == -1:
-            continue
+    def entry_sql(self, count, timestamp):
+        # create entry for new value
+        part_number = self.db_part_number_data
+        table = self.dbtable
+        machine = self.db_machine_data
 
-        # adjust for Scale factor
-        count = count * entry.get('Scale', 1)
-
-        machine = entry['Machine']
-
-        # deal with counter == 0 edge case
-        if count == 0:
-            entry['lastcount'] = count
-            return  # machine count rolled over or is not running
-
-        if entry['lastcount'] == 0:  # first time through...
-            entry['lastcount'] = count
-            logger.info(f'First pass through on machine {machine}')
-
-        if count > entry['lastcount']:
-            for part_count_entry in range(entry['lastcount'] + 1, count + 1):
-                create_part_count_entry(entry, part_count_entry, config)
-                logger.info(f'Creating entry for: {machine} - {part_count_entry} ')
-            entry['lastcount'] = count
-
-        # set the next read timestamp
-        entry['nextread'] += frequency
-
-
-def read_modbus_counter(entry):
-    c = ModbusClient(host=entry['processor_ip'], auto_open=True, auto_close=True)
-    regs = c.read_holding_registers(entry['register'], 2)
-    return regs[0] + (regs[1] * 65536)
-
-
-def read_pylogix_counter(counter_entry):
-    with PLC() as comm:
-        comm.IPAddress = counter_entry['processor_ip']
-        comm.ProcessorSlot = counter_entry['processor_slot']
-
-        tag = counter_entry['tag']
-        part_count = comm.Read(tag)
-
-        if part_count.Status != 'Success':
-            logger.error(f'Failed to read: {part_count} : {tag}')
-            return -1
-
-        logger.debug(f'Read pylogix counter:{part_count}, tag:{counter_entry["tag"]}')
-
-    return part_count.Value
+        sql = f'INSERT INTO {table} '
+        sql += f'(Machine, '
+        if part_number:
+            sql += f'Part, '
+        sql += f'PerpetualCount, Timestamp) '
+        sql += f'VALUES ("{machine}" ,'
+        if part_number:
+            sql += f'"{part_number}" , '
+        sql += f'{count}, {timestamp});\n'
+        return sql
 
 
-def create_part_count_entry(counter_entry, count, config):
-    timestamp = str(int(counter_entry['lastread']))
-    file_path = f'{config["sqldir"]}{timestamp}.sql'
-    sql = part_count_entry_sql(counter_entry, count)
-    write_sql_file(sql, file_path)
+class DataTag(Tag):
+
+    def __init__(self, parent, address, scale, frequency, db_table, machine, part_number):
+        raise NotImplementedError
+        super().__init__(parent, address, scale, frequency, db_table)
+        self.type = 'data'
+
+    def poll(self):
+        pass
 
 
-def part_count_entry_sql(counter_entry, count):
-    part_number = counter_entry.get('Part_Number')
-    extra_data = counter_entry.get('extra_data', '')
-    table = counter_entry['table']
-    timestamp = counter_entry['lastread']
-    machine = counter_entry['Machine']
+class Device:
 
-    sql = f'INSERT INTO {table} '
-    sql += f'(Machine, '
-    if part_number:
-        sql += f'Part, '
-    if extra_data:
-        sql += f'ExtraData, '
-    sql += f'PerpetualCount, Timestamp) '
-    sql += f'VALUES ("{machine}" ,'
-    if part_number:
-        sql += f'"{part_number}" , '
-    if extra_data:
-        sql += f'"{extra_data}", '
-    sql += f'{count}, {timestamp});\n'
-    return sql
+    def __init__(self, name, ip, frequency):
+        self.name = name
+        self.ip = ip
+        self.frequency = frequency
+        self.tag_list = []
+
+    def add_data_point(self, tag):
+        self.tag_list.append(tag)
+
+    def poll_tags(self):
+        for tag in self.tag_list:
+            tag.poll()
+
+    def process_counter_tag(self, tag):
+        pass
+
+    def read_tag(self, tag):
+        pass
 
 
-def write_sql_file(sql, path):
-    with open(path, "a+") as file:
-        file.write(sql)
+class PylogixDevice(Device):
+
+    def __init__(self, name, ip, frequency, slot):
+        super().__init__(name, ip, frequency)
+        self.driver = "pylogix"
+        self.processor_slot = slot
+        self.comm = PLC(ip_address=self.ip, slot=self.processor_slot)
+
+    def add_data_point(self, tag):
+        tag_type = tag.get('type', None)
+        tag_name = tag.get('tag', None)
+        scale = tag.get('scale', 1)
+        frequency = tag.get('frequency', 0)
+        frequency = max(self.frequency, frequency)
+        db_table = tag.get('table', None)
+        parent = self
+
+        if tag_type == 'counter':
+            machine = tag.get('machine', None)
+            part_number = tag.get('part_number', None)
+            new_tag_object = CounterTag(parent, tag_name, scale, frequency, db_table, machine, part_number)
+
+        elif tag_type == 'data':
+            raise NotImplementedError
+            name = tag.get('name', None)
+            strategy = tag.get('strategy', None)
+            new_tag_object = DataTag(parent, tag_name, scale, db_table, name, strategy)
+
+        else:
+            raise NotImplementedError
+
+        super().add_data_point(new_tag_object)
+
+    def read(self, tag):
+        error_flag = False
+        ret = self.comm.Read(tag.address)
+        ret.Value = test_count
+        ret.Status = 'Success'
+
+        if ret.Status != "Success":
+            logger.info(f'Failed to read \
+                {self.name}:{tag.address} ({ret.Status})')
+            error_flag = True
+        else:
+            logger.debug(f'Successfully read \
+                {self.name}:{tag.address} ({ret.Value})')
+        return ret.Value, error_flag
+
+
+class ModbusDevice(Device):
+
+    def __init__(self, name, ip, frequency):
+        super().__init__(name, ip, frequency)
+        self.driver = "modbus"
+        self.comm = ModbusClient(host=ip, auto_open=True, auto_close=True)
+
+    def add_data_point(self, tag):
+        tag_type = tag.get('type', None)
+        register = tag.get('register', None)
+        scale = tag.get('scale', 1)
+        frequency = tag.get('frequency', 0)
+        frequency = max(self.frequency, frequency)
+        db_table = tag.get('table', None)
+        parent = self
+
+        if tag_type == 'ADAM_counter':
+            machine = tag.get('machine', None)
+            part_number = tag.get('part_number', None)
+            tag_object = CounterTag(parent, register, scale, frequency, db_table, machine, part_number)
+        elif tag_type == 'data':
+            name = tag.get('name', None)
+            strategy = tag.get('strategy', None)
+            # tag_object = PylogixDataTag(tag_name, scale, db_table, name, strategy)
+
+        super().add_data_point(tag_object)
+
+    def read(self, tag):
+        error_flag = False
+        # TODO: catch errors and log
+        regs = self.comm.read_holding_registers(tag.address, 2)
+        count = regs[0] + (regs[1] * 65536)
+        # if ret.Status != "Success":
+        #     logger.info(f'Failed to read {self.name}:{tag.tag_name} ({ret.Status})')
+        #     continue
+
+        logger.debug(f'Successfully read \
+                {self.name}:{tag.address} ({count})')
+
+        return count, error_flag
+
+
+def process_collect_config():
+    devices = []
+
+    # reads the yaml config file and returns it as a data structure
+    config = read_config_file('collect')
+
+    for device in config['devices']:
+
+        name = device.get('name', None)
+        ip = device.get('ip', None)
+        frequency = device.get('frequency', 1)
+
+        driver = device.get('driver', None)
+
+        if driver == 'pylogix':
+            slot = device.get('processor_slot', 0)
+            device_entry = PylogixDevice(name, ip, frequency, slot)
+
+        elif driver == 'modbus':
+            device_entry = ModbusDevice(name, ip, frequency)
+
+        for tag in device['tags']:
+            device_entry.add_data_point(tag)
+        devices.append(device_entry)
+
+    return devices
 
 
 @logger.catch()
 def main():
-
-    # if os.environ.get("DEBUG", default=False):
-    #     logger.add('templogs/prodmon-collect.log')
-    # else:
-    #     logger.add('/var/log/prodmon-collect.log', rotation="10 Mb")
-    #
-
-    collect_config = get_config('collect')
-
-    set_config_defaults(collect_config)
-
+    devices = process_collect_config()
     while True:
-        loop(collect_config)
+        for device in devices:
+            device.poll_tags()
 
 
 if __name__ == "__main__":

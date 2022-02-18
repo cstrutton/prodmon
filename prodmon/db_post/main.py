@@ -7,7 +7,7 @@ from time import sleep
 
 import mysql.connector
 
-from prodmon.shared.configuration_file import get_config, config_default
+from prodmon.shared.configuration_file import read_config_file, config_default
 from prodmon.shared.log_setup import get_logger
 
 logger = get_logger()
@@ -52,7 +52,7 @@ def execute_sql(post_config):
 
 @logger.catch()
 def main():
-    post_config = get_config('post')
+    post_config = read_config_file('post')
     set_config_defaults(post_config)
 
     while True:

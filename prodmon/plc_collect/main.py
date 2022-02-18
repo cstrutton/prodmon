@@ -164,16 +164,12 @@ class PylogixDevice(Device):
     def read(self, tag):
         error_flag = False
         ret = self.comm.Read(tag.address)
-        ret.Value = test_count
-        ret.Status = 'Success'
 
         if ret.Status != "Success":
-            logger.info(f'Failed to read \
-                {self.name}:{tag.address} ({ret.Status})')
+            logger.info(f'Failed to read {self.name}:{tag.address} ({ret.Status})')
             error_flag = True
         else:
-            logger.debug(f'Successfully read \
-                {self.name}:{tag.address} ({ret.Value})')
+            logger.debug(f'Successfully read {self.name}:{tag.address} ({ret.Value})')
         return ret.Value, error_flag
 
 
@@ -206,15 +202,16 @@ class ModbusDevice(Device):
 
     def read(self, tag):
         error_flag = False
-        # TODO: catch errors and log
+        count = None
         regs = self.comm.read_holding_registers(tag.address, 2)
-        count = regs[0] + (regs[1] * 65536)
-        # if ret.Status != "Success":
-        #     logger.info(f'Failed to read {self.name}:{tag.tag_name} ({ret.Status})')
-        #     continue
 
-        logger.debug(f'Successfully read \
-                {self.name}:{tag.address} ({count})')
+        if regs:
+            count = regs[0] + (regs[1] * 65536)
+            logger.debug(f'Successfully read {self.name}:{tag.address} ({count})')
+        else:
+            error_flag = True
+            count = None
+            logger.info(f'Failed to read {self.name}:{tag.address}')
 
         return count, error_flag
 

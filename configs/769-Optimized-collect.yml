@@ -6,42 +6,42 @@ devices:
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: 1
     tags:
-      - type: 'counter'
+      - type: counter
         tag: 'Program:Deburr_Cell.CountPart31.acc'
         scale: 1
         part_number: '50-3050'
         machine: 769                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-      - type: pylogix                           # type = pylogix | modbus
+      - type: counter
         tag: 'Program:Deburr_Cell.CountPart32.acc'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-1467'
         machine: 769                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-      - type: pylogix                           # type = pylogix | modbus
+      - type: counter
         tag: 'Program:Deburr_Cell.CountPart33.acc'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-5710'
         machine: 769                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-      - type: pylogix                           # type = pylogix | modbus
+      - type: counter
         tag: 'Program:Broach_Cell.CountPart21.acc'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-3050'
         machine: 770                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-      - type: pylogix                           # type = pylogix | modbus
+      - type: counter
         tag: 'Program:Broach_Cell.CountPart22.acc'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-1467'
         machine: 770                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
-      - type: pylogix                           # type = pylogix | modbus
+      - type: counter
         tag: 'Program:Broach_Cell.CountPart23.acc'    # tag is the PLC tag to read
         scale: 1
         part_number: '50-5710'

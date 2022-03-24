@@ -6,6 +6,12 @@ devices:
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: 1
     tags:
+      - type: ping
+        name: '769 Optimized Inducto&Slurry'
+        tag: 'Program:Deburr_Cell.CountPart31.acc'
+        frequency: 600
+        table: GFxPRoduction          # database table to write to
+
       - type: counter
         tag: 'Program:Deburr_Cell.CountPart31.acc'
         scale: 1

@@ -34,6 +34,36 @@ class Tag:
         pass
 
 
+class PingTag(Tag):
+    def __init__(self, parent, name, address, frequency, db_table):
+        super().__init__(parent, address, 1, frequency, db_table)
+        self.type = 'ping'
+        self.name = name
+
+    def poll(self):
+        timestamp = time.time()
+        if self.next_read < timestamp:
+            # increment now so it doesn't get missed
+            self.next_read = timestamp + self.frequency
+
+            value, error_flag = self.parent.read(self)
+            if error_flag:
+                return
+
+            logger.info(f'Ping {self.address}')
+            sys.stdout.flush()
+            file_path = f'{SQL_DIRECTORY}{timestamp}.sql'
+            sql = self.entry_sql(timestamp)
+            with open(file_path, "a+") as file:
+                file.write(sql)
+
+    def entry_sql(self, timestamp):
+        sql = f'UPDATE {self.dbtable} '
+        sql += f'SET Timestamp = {timestamp} '
+        sql += f'WHERE Name = {self.name};\n'
+        return sql
+
+
 class CounterTag(Tag):
 
     def __init__(self, parent, address, scale, frequency, db_table, machine, part_number):
@@ -138,17 +168,21 @@ class PylogixDevice(Device):
 
     def add_data_point(self, tag):
         tag_type = tag.get('type', None)
-        tag_name = tag.get('tag', None)
-        scale = tag.get('scale', 1)
         frequency = tag.get('frequency', 0)
         frequency = max(self.frequency, frequency)
+        tag_name = tag.get('tag', None)
         db_table = tag.get('table', None)
         parent = self
 
         if tag_type == 'counter':
+            scale = tag.get('scale', 1)
             machine = tag.get('machine', None)
             part_number = tag.get('part_number', None)
             new_tag_object = CounterTag(parent, tag_name, scale, frequency, db_table, machine, part_number)
+
+        elif tag_type == 'ping':
+            name = tag.get('name', None)
+            new_tag_object = PingTag(parent, name, tag_name, frequency, db_table)
 
         elif tag_type == 'data':
             raise NotImplementedError

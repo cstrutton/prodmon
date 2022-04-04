@@ -49,11 +49,11 @@ class PingTag(Tag):
             value, error_flag = self.parent.read(self)
             if error_flag:
                 return
-
+            timestamp_str = str(int(timestamp))
             logger.info(f'Ping {self.address}')
             sys.stdout.flush()
-            file_path = f'{SQL_DIRECTORY}{timestamp}.sql'
-            sql = self.entry_sql(timestamp)
+            file_path = f'{SQL_DIRECTORY}{timestamp_str}.sql'
+            sql = self.entry_sql(timestamp_str)
             with open(file_path, "a+") as file:
                 file.write(sql)
 
@@ -96,12 +96,13 @@ class CounterTag(Tag):
             if not count > self.last_value:
                 return
 
+            timestamp_str = str(int(timestamp))
             # create entry for new values
             for part_count_entry in range(self.last_value + 1, count + 1):
                 logger.info(f'Creating entry for: {self.parent.name}:{self.address} ({count})')
                 sys.stdout.flush()
-                file_path = f'{SQL_DIRECTORY}{timestamp}.sql'
-                sql = self.entry_sql(part_count_entry, timestamp)
+                file_path = f'{SQL_DIRECTORY}{timestamp_str}.sql'
+                sql = self.entry_sql(part_count_entry, timestamp_str)
                 with open(file_path, "a+") as file:
                     file.write(sql)
 

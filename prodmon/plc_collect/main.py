@@ -50,7 +50,7 @@ class PingTag(Tag):
             if error_flag:
                 return
             timestamp_str = str(int(timestamp))
-            logger.info(f'Ping {self.address}')
+            logger.info(f'Ping {self.name}:{self.address}')
             sys.stdout.flush()
             file_path = f'{SQL_DIRECTORY}{timestamp_str}.sql'
             sql = self.entry_sql(timestamp_str)
@@ -58,9 +58,8 @@ class PingTag(Tag):
                 file.write(sql)
 
     def entry_sql(self, timestamp):
-        sql = f'UPDATE {self.dbtable} '
-        sql += f'SET Timestamp = {timestamp} '
-        sql += f'WHERE Name = {self.name};\n'
+        sql = f'REPLACE INTO {self.dbtable}  '
+        sql += f'VALUES ({self.name}, {timestamp});\n'
         return sql
 
 

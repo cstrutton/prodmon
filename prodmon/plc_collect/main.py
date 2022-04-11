@@ -59,7 +59,7 @@ class PingTag(Tag):
 
     def entry_sql(self, timestamp):
         sql = f'REPLACE INTO {self.dbtable}  '
-        sql += f'VALUES ({self.name}, {timestamp});\n'
+        sql += f'VALUES ("{self.name}", {timestamp});\n'
         return sql
 
 

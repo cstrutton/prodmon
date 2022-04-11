@@ -9,8 +9,8 @@ devices:
       - type: ping
         name: '769 Optimized Inducto & Slurry'
         tag: 'Program:Deburr_Cell.CountPart31.acc'
-        frequency: 300
-        table: prodmon_ping          # database table to write to
+        frequency: 600
+        table: GFxPRoduction          # database table to write to
 
       - type: counter
         tag: 'Program:Deburr_Cell.CountPart31.acc'

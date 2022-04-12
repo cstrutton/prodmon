@@ -25,8 +25,8 @@ pip3 install wheel
 pip3 install -e . 
 
 # Install the service unit files
-cp service_files/collect.service /etc/systemd/system/collect.service
-cp service_files/post.service /etc/systemd/system/post.service
+cp service_files/NanoPi/collect.service /etc/systemd/system/collect.service
+cp service_files/NanoPi/post.service /etc/systemd/system/post.service
 
 # Enable services
 sudo systemctl enable collect

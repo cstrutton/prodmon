@@ -1,0 +1,27 @@
+devices:
+
+  - driver: pylogix               # type = pylogix | modbus
+    name: '797 ZF Gauge'
+    ip: 192.168.1.1               # processor_ip is the controller's ip address
+    processor_slot: 0             # processor_slot is the controller's slot
+    frequency: .5
+    tags:
+      - type: ping
+        name: '797 ZF Gauge'
+        tag: 'ProdCount.ACC'
+        frequency: 600
+        table: prodmon_ping          # database table to write to
+
+      - type: counter
+        tag: 'ProdCount.acc'
+        scale: 1
+        part_number: '50-4865'
+        machine: 797                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
+
+      - type: counter
+        tag: 'ProdCountReject.ACC'    # tag is the PLC tag to read
+        scale: 1
+        part_number: '50-4865'
+        machine: 797                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to

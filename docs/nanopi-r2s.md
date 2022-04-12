@@ -1,6 +1,6 @@
 ## Setup on NanoPi using Ubuntu Core
 
-### Basics:
+### Basics:  Setup networking ports (dns) then:
 
 ```bash
 # Ubuntu Mirrors are blocked by Stackpole's web filter

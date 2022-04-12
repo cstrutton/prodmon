@@ -1,6 +1,6 @@
 ## Setup on NanoPi using Ubuntu Core
 
-### Basics:  Setup networking ports (dns) then:
+### Basics:
 
 ```bash
 # Ubuntu Mirrors are blocked by Stackpole's web filter
@@ -13,7 +13,10 @@ apt upgrade -y
 
 # Install prerequisites
 apt install -y python3-pip nano
+```
+Once Nano is installed, [edit the network files before continuing](https://github.com/cstrutton/prodmon/blob/master/docs/network_config.md)
 
+```bash
 # Install Prodmon software
 cd /opt
 git clone https://github.com/cstrutton/prodmon

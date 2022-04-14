@@ -5,57 +5,57 @@ devices:
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: .5
     tags:
-     - type: ping
-        name: '728 Trilobe Taco'
-        tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
-        frequency: 300
-        table: prodmon_ping          # database table to write to
+    - type: ping
+      name: '728 Trilobe Taco'
+      tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
+      frequency: 300
+      table: prodmon_ping          # database table to write to
 
     - type: counter
-        tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 728                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+      tag: 'Program:MainProgram.ProdCountLine.ACC'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 728                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
 
     - type: counter
-        tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 728O                 # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+      tag: 'Program:MainProgram.ProdCountOverflow.ACC'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 728O                 # written to machine column in db
+      table: GFxPRoduction          # database table to write to
 
     - type: counter
-        tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 728R                 # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+      tag: 'Program:MainProgram.ProdCountReject.ACC'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 728R                 # written to machine column in db
+      table: GFxPRoduction          # database table to write to
 
   - name: '650 Trilobe Slurry'
     driver: modbus                # type = pylogix | modbus
     ip: 10.4.42.169               # processor_ip is the controller's ip address
     frequency: .5
     tags:
-     - type: ping
-        name: '650 Trilobe Slurry'
-        register: 16                  # modbus register to read
-        frequency: 300
-        table: prodmon_ping          # database table to write to
+    - type: ping
+      name: '650 Trilobe Slurry'
+      register: 16                  # modbus register to read
+      frequency: 300
+      table: prodmon_ping          # database table to write to
 
     - type: counter
-        register: 16                  # modbus register to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 650L                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+      register: 16                  # modbus register to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 650L                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
 
     - type: counter
-        register: 18                  # modbus register to read
-        scale: 1
-        part_number: '50-1467'
-        machine: 650R                  # written to machine column in db
-        table: GFxPRoduction          # database table to write to
+      register: 18                  # modbus register to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 650R                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
 
 #  - name: 'Trilobe Machining'
 #    driver: pylogix               # type = pylogix | modbus

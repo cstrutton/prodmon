@@ -128,7 +128,7 @@ class CounterTag(Tag):
 class DataTag(Tag):
 
     def __init__(self, parent, address, scale, frequency, db_table, machine, part_number):
-        raise NotImplementedError
+        raise NotImplementedError('Data Tags are not implemented')
         super().__init__(parent, address, scale, frequency, db_table)
         self.type = 'data'
 
@@ -204,7 +204,8 @@ class PylogixDevice(Device):
             error_flag = True
         else:
             logger.debug(f'Successfully read {self.name}:{tag.address} ({ret.Value})')
-        return ret.Value, error_flag
+        # return ret.Value, error_flag
+        return 0, False
 
 
 class ModbusDevice(Device):
@@ -227,10 +228,15 @@ class ModbusDevice(Device):
             machine = tag.get('machine', None)
             part_number = tag.get('part_number', None)
             tag_object = CounterTag(parent, register, scale, frequency, db_table, machine, part_number)
+
+        elif tag_type == 'ping':
+            name = tag.get('name', None)
+            tag_object = PingTag(parent, name, register, frequency, db_table)
+
         elif tag_type == 'data':
             name = tag.get('name', None)
             strategy = tag.get('strategy', None)
-            # tag_object = PylogixDataTag(tag_name, scale, db_table, name, strategy)
+            tag_object = DataTag(parent, None, frequency, db_table, strategy)
 
         super().add_data_point(tag_object)
 

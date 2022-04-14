@@ -43,14 +43,14 @@ devices:
       frequency: 300
       table: prodmon_ping          # database table to write to
 
-    - type: counter
+    - type: ADAM_counter
       register: 16                  # modbus register to read
       scale: 1
       part_number: '50-1467'
       machine: 650L                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
-    - type: counter
+    - type: ADAM_counter
       register: 18                  # modbus register to read
       scale: 1
       part_number: '50-1467'

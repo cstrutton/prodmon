@@ -35,12 +35,12 @@ devices:
         tag: 'Program:MainProgram.ProdCount.acc'
         scale: 2
         part_number: '50-9341'
-        machine: 1511                 # written to machine column in db
+        machine: 1530                 # written to machine column in db
         table: GFxPRoduction          # database table to write tominimum_cycle: .5
 
       - type: counter
         tag: 'Program:MainProgram.ProdCountReject.acc'
         scale: 2
         part_number: '50-9341'
-        machine: 1511REJ              # written to machine column in db
+        machine: 1530REJ              # written to machine column in db
         table: GFxPRoduction          # database table to write tominimum_cycle: .5

@@ -8,7 +8,7 @@ devices:
     tags:
       - type: ping
         name: '936 6L Auto Gauge'
-        tag: 'Program:Deburr_Cell.CountPart31.acc'
+        tag: 'ProdCountX16.acc'
         frequency: 600
         table: prodmon_ping      # database table to write to
 

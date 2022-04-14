@@ -15,13 +15,13 @@ devices:
       - type: counter
         tag: 'ProdCount.acc'
         scale: 1
-        part_number: '50-4865'
+        part_number: '50-4748'
         machine: 797                  # written to machine column in db
         table: GFxPRoduction          # database table to write to
 
       - type: counter
         tag: 'ProdCountReject.ACC'    # tag is the PLC tag to read
         scale: 1
-        part_number: '50-4865'
+        part_number: '50-4748'
         machine: 797                  # written to machine column in db
         table: GFxPRoduction          # database table to write to

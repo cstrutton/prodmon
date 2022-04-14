@@ -37,11 +37,11 @@ devices:
     ip: 10.4.42.169               # processor_ip is the controller's ip address
     frequency: .5
     tags:
-#    - type: ping
-#      name: '650 Trilobe Slurry'
-#      register: 16                  # modbus register to read
-#      frequency: 300
-#      table: prodmon_ping          # database table to write to
+    - type: ping
+      name: '650 Trilobe Slurry'
+      register: 16                  # modbus register to read
+      frequency: 300
+      table: prodmon_ping          # database table to write to
 
     - type: ADAM_counter
       register: 16                  # modbus register to read

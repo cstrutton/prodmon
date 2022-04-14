@@ -1,23 +1,27 @@
-minimum_cycle: .5
+devices:
 
-tags:
-  - type: pylogix                           # type = pylogix | modbus
-    processor_ip: 192.168.1.80              # processor_ip is the controller's ip address
-    processor_slot: 0
-    tag: Program:MainProgram.ProdCount.acc  # tag is the PLC tag to read
-    Part_Number: '50-9341'
-    Scale: 2
-    frequency: 1                  # how often to try to read the tag in seconds
-    table: GFxPRoduction          # database table to write to
-    Machine: 1501                 # written to machine column in db
+  - driver: pylogix               # type = pylogix | modbus
+    name: '797 ZF Gauge'
+    ip: 192.168.1.80               # processor_ip is the controller's ip address
+    processor_slot: 0             # processor_slot is the controller's slot
+    frequency: 1
+    tags:
+      - type: ping
+        name: '10R80 OP30 1501'
+        tag: 'Program:MainProgram.ProdCount.acc'
+        frequency: 300
+        table: prodmon_ping          # database table to write to
 
-  - type: pylogix                           # type = pylogix | modbus
-    processor_ip: 192.168.1.80              # processor_ip is the controller's ip address
-    processor_slot: 0
-    tag: Program:MainProgram.ProdCountReject.acc  # tag is the PLC tag to read
-    Part_Number: '50-9341'
-    Scale: 2
-    frequency: 1                  # how often to try to read the tag in seconds
-    table: GFxPRoduction          # database table to write to
-    Machine: 1501REJ              # written to machine column in db
+      - type: counter
+        tag: 'Program:MainProgram.ProdCount.acc'
+        scale: 2
+        part_number: '50-9341'
+        machine: 1501                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to
 
+      - type: counter
+        tag: 'Program:MainProgram.ProdCountReject.acc'
+        scale: 2
+        part_number: '50-9341'
+        machine: 1501REJ                  # written to machine column in db
+        table: GFxPRoduction          # database table to write to

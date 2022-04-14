@@ -1,7 +1,7 @@
 devices:
   - name: '728 Taco'
     driver: pylogix               # type = pylogix | modbus
-    ip: 192.168.1.1               # processor_ip is the controller's ip address
+    ip: 192.168.100.1               # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: .5
     tags:
@@ -59,7 +59,7 @@ devices:
 
 #  - name: 'Trilobe Machining'
 #    driver: pylogix               # type = pylogix | modbus
-#    ip: 192.168.1.46               # processor_ip is the controller's ip address
+#    ip: 192.168.100.46               # processor_ip is the controller's ip address
 #    processor_slot: 12             # processor_slot is the controller's slot
 #    frequency: .5
 #    tags:

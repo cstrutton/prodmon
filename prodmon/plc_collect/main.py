@@ -204,8 +204,7 @@ class PylogixDevice(Device):
             error_flag = True
         else:
             logger.debug(f'Successfully read {self.name}:{tag.address} ({ret.Value})')
-        # return ret.Value, error_flag
-        return 0, False
+        return ret.Value, error_flag
 
 
 class ModbusDevice(Device):

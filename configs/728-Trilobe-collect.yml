@@ -40,35 +40,35 @@ devices:
       table: GFxPRoduction          # database table to write to
 
     - type: counter
-      tag: 'LinePanelRead[4]'    # tag is the PLC tag to read
+      tag: 'LinePanelRead[5]'    # tag is the PLC tag to read
       scale: 1
       part_number: '50-1467'
       machine: 648                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
     - type: counter
-      tag: 'LinePanelRead[5]'    # tag is the PLC tag to read
+      tag: 'LinePanelRead[6]'    # tag is the PLC tag to read
       scale: 1
       part_number: '50-1467'
       machine: 649                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
     - type: counter
-      tag: 'LinePanelRead[6]'    # tag is the PLC tag to read
+      tag: 'LinePanelRead[7]'    # tag is the PLC tag to read
       scale: 1
       part_number: '50-1467'
       machine: 646                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
     - type: counter
-      tag: 'LinePanelRead[7]'    # tag is the PLC tag to read
+      tag: 'LinePanelRead[8]'    # tag is the PLC tag to read
       scale: 1
       part_number: '50-1467'
       machine: 645                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
     - type: counter
-      tag: 'LinePanelRead[8]'    # tag is the PLC tag to read
+      tag: 'LinePanelRead[9]'    # tag is the PLC tag to read
       scale: 1
       part_number: '50-1467'
       machine: 644                  # written to machine column in db

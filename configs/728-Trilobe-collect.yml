@@ -32,6 +32,48 @@ devices:
       machine: 728R                 # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
+    - type: counter
+      tag: 'LinePanelRead[3]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 647                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
+    - type: counter
+      tag: 'LinePanelRead[4]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 648                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
+    - type: counter
+      tag: 'LinePanelRead[5]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 649                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
+    - type: counter
+      tag: 'LinePanelRead[6]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 646                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
+    - type: counter
+      tag: 'LinePanelRead[7]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 645                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
+    - type: counter
+      tag: 'LinePanelRead[8]'    # tag is the PLC tag to read
+      scale: 1
+      part_number: '50-1467'
+      machine: 644                  # written to machine column in db
+      table: GFxPRoduction          # database table to write to
+
   - name: '650 Trilobe Slurry'
     driver: modbus                # type = pylogix | modbus
     ip: 10.4.42.169               # processor_ip is the controller's ip address
@@ -57,17 +99,17 @@ devices:
       machine: 650R                  # written to machine column in db
       table: GFxPRoduction          # database table to write to
 
-#  - name: 'Trilobe Machining'
-#    driver: pylogix               # type = pylogix | modbus
-#    ip: 192.168.100.46               # processor_ip is the controller's ip address
-#    processor_slot: 12             # processor_slot is the controller's slot
-#    frequency: .5
-#    tags:
-#     - type: ping
-#        name: 'Trilobe Machining'
-#        tag: 'Program:OKUMA_1.ProdCount.ACC'    # tag is the PLC tag to read
-#        frequency: 300
-#        table: prodmon_ping          # database table to write to
+  - name: 'Trilobe Machining'
+    driver: pylogix               # type = pylogix | modbus
+    ip: 192.168.100.46               # processor_ip is the controller's ip address
+    processor_slot: 12             # processor_slot is the controller's slot
+    frequency: .5
+    tags:
+     - type: ping
+        name: 'Trilobe Machining'
+        tag: 'Program:OKUMA_1.ProdCount.ACC'    # tag is the PLC tag to read
+        frequency: 300
+        table: prodmon_ping          # database table to write to
 #
 #    - type: counter
 #        tag: 'Program:OKUMA_1.ProdCount.ACC'    # tag is the PLC tag to read

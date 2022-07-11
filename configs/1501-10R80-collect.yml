@@ -1,7 +1,7 @@
 devices:
 
   - driver: pylogix               # type = pylogix | modbus
-    name: '10R80 OP30 1501'
+    name: '10R80 OP40 1501'
     ip: 192.168.1.80               # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: 1

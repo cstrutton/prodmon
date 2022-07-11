@@ -7,7 +7,7 @@ devices:
     frequency: 1
     tags:
       - type: ping
-        name: '10R80 OP30 1501'
+        name: '10R80 OP40 1501'
         tag: 'Program:MainProgram.ProdCount.acc'
         frequency: 300
         table: prodmon_ping          # database table to write to

@@ -20,7 +20,7 @@ devices:
         table: GFxPRoduction          # database table to write to
 
   - driver: pylogix               # type = pylogix | modbus
-    name: '10R80 OP100 1530'
+    name: '10R80 1530'
     ip: 192.168.1.170               # processor_ip is the controller's ip address
     processor_slot: 0             # processor_slot is the controller's slot
     frequency: 1

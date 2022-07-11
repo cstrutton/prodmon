@@ -57,11 +57,6 @@ class PingTag(Tag):
             with open(file_path, "a+") as file:
                 file.write(sql)
 
-    def entry_sql2(self, timestamp):
-        sql = f'REPLACE INTO {self.dbtable}  '
-        sql += f'VALUES ("{self.name}", {timestamp});\n'
-        return sql
-
     def entry_sql(self, timestamp):
         sql = f'INSERT INTO {self.dbtable} (Name, Timestamp)'
         sql += f'VALUES ("{self.name}", {timestamp}) ' \

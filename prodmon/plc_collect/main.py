@@ -63,7 +63,7 @@ class PingTag(Tag):
         return sql
 
     def entry_sql(self, timestamp):
-        sql = f'INSERT INTO {self.dbtable}  '
+        sql = f'INSERT INTO {self.dbtable} (Name, Timestamp)'
         sql += f'VALUES ("{self.name}", {timestamp}) ' \
                f'ON DUPLICATE KEY UPDATE ' \
                f'Name= "{self.name}", Timestamp= {timestamp};\n'
